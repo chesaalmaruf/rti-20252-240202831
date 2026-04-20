@@ -53,8 +53,8 @@ Mata kuliah ini menggunakan pendekatan **Positivist** (fenomena TI bisa diukur o
 ## Template A.1 — Research Mindset Self-Assessment
 
 ```
-Nama Peneliti    : ____________________
-Tanggal          : ____________________
+Nama Peneliti    : Chesa Salsabil Al'ma'ruf 
+Tanggal          : 19 april 2026
 
 1. Ketika membaca klaim "metode X 95% akurat":
    - Pertanyaan pertama saya: Bagaimana kriteria inklusi dan eksklusi ditetapkan untuk memastikan validitas data tersebut?
