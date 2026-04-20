@@ -53,7 +53,7 @@ Mata kuliah ini menggunakan pendekatan **Positivist** (fenomena TI bisa diukur o
 ## Template A.1 — Research Mindset Self-Assessment
 
 ```
-Nama Peneliti    : Chesa Salsabil Al'ma'ruf 
+Nama Peneliti    : chesa salsabil al'ma'ruf
 Tanggal          : 19 april 2026
 
 1. Ketika membaca klaim "metode X 95% akurat":
@@ -82,7 +82,7 @@ Tanggal          : 19 april 2026
 
 Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan performa." Telusuri setiap tahap Research Trust Model.
 
-**Paper yang dipilih:**
+**Paper yang dipilih:** Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
 > Judul: Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
 > Penulis (Tahun):Maulana Muhamad Faisal, et al. (2026)
 | Tahap | Apa yang Dilakukan | Potensi Distorsi |
@@ -117,11 +117,10 @@ Justifikasi: Integritas dan ketelitian metodologis jauh lebih penting daripada n
 
 ## Latihan 3 — Posisi Paradigma
 
-**Topik riset:** ________________________________________
-
+**Topik riset:** Tren Penelitian Siste
 | Kriteria | Positivis | Interpretivis | Design Science |
 |----------|-----------|---------------|----------------|
-| Kesesuaian dengan topik (1–5) | *Contoh: 4* | *Contoh: 2* | *Contoh: 5* |
+| Kesesuaian dengan topik (1–5) |4 | 2 | 5 |
 | Jenis data yang dikumpulkan |Data terukur (jumlah paper) |Pemahaman mendalam tren |Solusi/rekomendasi strategis |
 | Limitasi paradigma | Kurang menangkap konteks sosial|Sulit digeneralisasi |Fokus pada hasil, bukan proses |
 
