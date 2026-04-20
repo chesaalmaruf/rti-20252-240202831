@@ -85,6 +85,7 @@ Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan perfor
 **Paper yang dipilih:** Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
 > Judul: Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
 > Penulis (Tahun):Maulana Muhamad Faisal, et al. (2026)
+
 | Tahap | Apa yang Dilakukan | Potensi Distorsi |
 |-------|-------------------|-----------------|
 | Reality → Data | Mengumpulkan 870 rekaman dari 4 database | Bias cakupan database (tidak semua riset masuk ke PubMed/Scopus) |
