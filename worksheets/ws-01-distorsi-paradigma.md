@@ -94,8 +94,7 @@ Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan perfor
 | Analysis → Inference |Sintesis hasil menjadi tema strategis |Generalisasi yang terlalu luas dari hanya 10 studi terpilih |
 | Inference → Knowledge |Memberikan rekomendasi untuk masa depan |Mengabaikan riset lokal yang tidak terindeks internasional |
 
-**Distorsi paling besar di tahap:** ________________________
-
+**Distorsi paling besar di tahap:** Inference → Knowledge
 **Dua distorsi spesifik yang teridentifikasi:**
 1. Selection Bias: Pemilihan hanya 10 studi dari 870 awal menciptakan risiko hasil yang tidak sepenuhnya representatif terhadap seluruh lanskap SI.
 2. Geographical Bias: Fokus riset yang dianalisis mungkin condong ke wilayah yang lebih dominan dalam database internasional, mengabaikan nuansa riset di negara berkembang.
