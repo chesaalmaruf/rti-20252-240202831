@@ -53,8 +53,8 @@ Mata kuliah ini menggunakan pendekatan **Positivist** (fenomena TI bisa diukur o
 ## Template A.1 — Research Mindset Self-Assessment
 
 ```
-Nama Peneliti    : ____________________
-Tanggal          : ____________________
+Nama Peneliti    : chesa salsabil al'ma'ruf
+Tanggal          : 19 april 2026
 
 1. Ketika membaca klaim "metode X 95% akurat":
    - Pertanyaan pertama saya: Bagaimana kriteria inklusi dan eksklusi ditetapkan untuk memastikan validitas data tersebut?
@@ -82,9 +82,16 @@ Tanggal          : ____________________
 
 Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan performa." Telusuri setiap tahap Research Trust Model.
 
+<<<<<<< HEAD
 **Paper yang dipilih:**
 > Judul: Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
 > Penulis (Tahun):Maulana Muhamad Faisal, et al. (2026)
+=======
+**Paper yang dipilih:** Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
+> Judul: Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
+> Penulis (Tahun):Maulana Muhamad Faisal, et al. (2026)
+
+>>>>>>> f4aeacabf62ac0b80f4c3b12b329baa959ccd9b2
 | Tahap | Apa yang Dilakukan | Potensi Distorsi |
 |-------|-------------------|-----------------|
 | Reality → Data | Mengumpulkan 870 rekaman dari 4 database | Bias cakupan database (tidak semua riset masuk ke PubMed/Scopus) |
@@ -92,9 +99,13 @@ Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan perfor
 | Processing → Analysis |Ekstraksi data dari 125 laporan |Bias konfirmasi terhadap tren populer (AI/Big Data) |
 | Analysis → Inference |Sintesis hasil menjadi tema strategis |Generalisasi yang terlalu luas dari hanya 10 studi terpilih |
 | Inference → Knowledge |Memberikan rekomendasi untuk masa depan |Mengabaikan riset lokal yang tidak terindeks internasional |
+<<<<<<< HEAD
 
 **Distorsi paling besar di tahap:** ________________________
+=======
+>>>>>>> f4aeacabf62ac0b80f4c3b12b329baa959ccd9b2
 
+**Distorsi paling besar di tahap:** Inference → Knowledge
 **Dua distorsi spesifik yang teridentifikasi:**
 1. Selection Bias: Pemilihan hanya 10 studi dari 870 awal menciptakan risiko hasil yang tidak sepenuhnya representatif terhadap seluruh lanskap SI.
 2. Geographical Bias: Fokus riset yang dianalisis mungkin condong ke wilayah yang lebih dominan dalam database internasional, mengabaikan nuansa riset di negara berkembang.
@@ -133,4 +144,8 @@ Justifikasi: Integritas dan ketelitian metodologis jauh lebih penting daripada n
 > Sebelum membaca materi ini, apakah pernah mempertanyakan klaim "95% akurat"? Setelah memahami rantai distorsi, pertanyaan apa yang sekarang akan diajukan saat membaca paper?
 
 **Jawaban:**
+<<<<<<< HEAD
 >Setelah memahami rantai distorsi, saat membaca paper riset, pertanyaan yang akan saya ajukan sekarang adalah: "Apakah penulis menyertakan diagram alur seleksi data yang transparan, dan apakah mereka mengakui keterbatasan (limitasi) dari sampel yang digunakan?" Saya kini sadar bahwa klaim "95% akurat" tidak ada artinya jika proses filtering data di awal tidak dilakukan dengan sangat objektif dan terdokumentasi.
+=======
+>Setelah memahami rantai distorsi, saat membaca paper riset, pertanyaan yang akan saya ajukan sekarang adalah: "Apakah penulis menyertakan diagram alur seleksi data yang transparan, dan apakah mereka mengakui keterbatasan (limitasi) dari sampel yang digunakan?" Saya kini sadar bahwa klaim "95% akurat" tidak ada artinya jika proses filtering data di awal tidak dilakukan dengan sangat objektif dan terdokumentasi.
+>>>>>>> f4aeacabf62ac0b80f4c3b12b329baa959ccd9b2
