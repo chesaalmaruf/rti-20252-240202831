@@ -71,7 +71,7 @@ Gap Statement  : Mayoritas pelaku agribisnis memiliki keterbatasan literasi digi
 
 Research Question:
   Tipe         : [x] Comparison  [ ] Improvement  [ ] Exploratory
-  Formulasi    : Apakah penggunaan aplikasi pencatatan keuangan agribisnis berbasis web (Catat Yuk Tan!) secara signifikan memangkas waktu entri data dan mencapai skor System Usability Scale (SUS) yang lebih tinggi dibandingkan dengan metode pencatatan manual?
+  Formulasi    : Apakah penggunaan aplikasi pencatatan keuangan agribisnis berbasis web, secara signifikan memangkas waktu entri data dan mencapai skor System Usability Scale (SUS) yang lebih tinggi dibandingkan dengan metode pencatatan manual?
   Variabel IV  : Metode pencatatan transaksi (Aplikasi Web vs Buku Kas Manual)
   Variabel DV  : Efisiensi operasional dan tingkat penerimaan pengguna (usability)
   Metrik       : Waktu penyelesaian tugas / Task Completion Time (dalam detik) dan skor SUS
@@ -161,5 +161,9 @@ Lengkapi rantai dari RQ hingga metode analisis.
 > Ambil satu judul skripsi/paper yang pernah dibaca. Coba ekstrak RQ-nya. Apakah RQ tersebut memenuhi semua komponen (metode, metrik, baseline, konteks)? Jika tidak, apa yang hilang?
 
 **Judul:** "Evaluation of Smart Agriculture Prototype using SUS Method".
+
 **RQ yang diekstrak:**Bagaimana tingkat fungsionalitas dan skor usability dari prototipe aplikasi pertanian pintar (smart farming) berbasis mobile ketika dievaluasi oleh responden petani berusia 23-70 tahun menggunakan metode Black Box dan SUS?.
+
+**Komponen yang hilang:** Di dalam paper tersebut, penelitian lebih condong ke arah Exploratory / Improvement sistem mandiri, sehingga tidak ada Baseline komparatif (metode pesaing) dalam perumusan eksperimennya. Sistem hanya dievaluasi secara terisolasi lalu skor SUS akhirnya dibandingkan dengan standar teoretis (nilai 68), tanpa membandingkannya dengan aplikasi sejenis atau metode konvensional secara head-to-head.
+=======
 **Komponen yang hilang:** Di dalam paper tersebut, penelitian lebih condong ke arah Exploratory / Improvement sistem mandiri, sehingga tidak ada Baseline komparatif (metode pesaing) dalam perumusan eksperimennya. Sistem hanya dievaluasi secara terisolasi lalu skor SUS akhirnya dibandingkan dengan standar teoretis (nilai 68), tanpa membandingkannya dengan aplikasi sejenis atau metode konvensional secara head-to-head.
