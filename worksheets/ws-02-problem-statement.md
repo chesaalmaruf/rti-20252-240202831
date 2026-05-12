@@ -61,99 +61,91 @@ Masalah riset yang layak harus memenuhi 5 kriteria:
 
 ---
 
+
+
 ## Template A.2 — Problem Statement Builder
-
 ```
-PROBLEM STATEMENT BUILDER
+**Domain & Konteks**
+- **Domain**: Database Management Systems (DBMS)[cite: 32].
+- **Konteks**: Aplikasi Mobile Kebutuhan Nutrisi Harian Balita (*Toddlers Daily Nutritional Needs*).
 
-Domain & Konteks
-  Domain   : Keuangan Komputasi (Financial Technology)
-  Konteks  : Prediksi harga saham berbasis Time Series di era big data
-System Context
-  Input       : Data historis harga saham (OHLC: Open, High, Low, Close)
-  Process     : Optimasi hyperparameter LSTM menggunakan Genetic Algorithm (GA) 
-  Output      : Prediksi harga saham yang akurat sesuai tren pasar 
-  Outcome     : Memberikan referensi ilmiah bagi investor dalam pengambilan keputusan
-  Constraints : Privasi data perusahaan, volatilitas pasar, dan overhead komputasi 
-  Stakeholders: Investor, Analis Keuangan, Peneliti Big Data
+**System Context**
+- **Input**: Data status nutrisi balita meliputi berat badan, umur, skor nutrisi, status gizi, ID unik, dan *timestamp*.
+- **Process**: Pelaksanaan operasi CRUD (Create, Read, Update, Delete) sebanyak 50 kali untuk setiap batch pengujian pada kedua database.
+- **Output**: Waktu respons database dalam satuan milidetik (ms)[cite: 170].
+- **Outcome**: Penentuan DBMS yang paling sesuai untuk mendukung responsivitas aplikasi pemantau nutrisi[cite: 17, 301].
+- **Constraints**: Data tidak terdistribusi normal (Shapiro-Wilk $p < alpha$), sehingga memerlukan uji non-parametrik Wilcoxon Signed-Rank[cite: 161, 162, 163, 164].
+- **Stakeholders**: Orang tua pengguna aplikasi dan pengembang aplikasi mobile[cite: 18, 62, 304].
 
-Fenomena → Problem
-  Fenomena yang diamati             : Pergeseran metode prediksi dari analisis tradisional ke algoritma Time Series
-  Gejala (symptom) yang terukur     : Ketidakmampuan model tradisional beradaptasi dengan perubahan lingkungan pasar yang cepat
-  Masalah yang didiagnosis          :  Kurangnya generalisasi pada model LSTM standar akibat pemilihan parameter yang tidak optimal 
-  Masalah riset (researchable)      : pakah integrasi GA ke dalam LSTM dapat mengoptimalkan parameter secara otomatis untuk meningkatkan akurasi prediksi saham? 
-  Variabel yang terukur             : MAE, MSE, RMSE, dan R²
+**Fenomena → Problem**
+- **Fenomena yang diamati**: Adanya berbagai pilihan DBMS seperti MySQL (Relasional) dan Firebase (NoSQL/Cloud-hosted) untuk pengembangan aplikasi mobile[cite: 40, 43, 44].
+- **Gejala (symptom) yang terukur**: Kebutuhan pengguna akan waktu respons aplikasi yang cepat agar dapat bekerja secara efektif dan tidak terdistraksi[cite: 34, 35].
+- **Masalah yang didiagnosis**: MySQL memiliki tantangan dalam biaya logging dan skalabilitas [cite: 42][cite_start], sementara Firebase Realtime Database unggul dalam sinkronisasi tetapi sulit untuk kueri data kompleks[cite: 44].
+- **Masalah riset (researchable)**: Perbandingan performa waktu respons antara Firebase Realtime Database dan MySQL menggunakan uji Wilcoxon Signed-Rank pada operasi CRUD[cite: 10, 16, 17].
+- **Variabel yang terukur**: Waktu respons database (milidetik)[cite: 16, 170].
 
-Problem Quality Check
-  [x] Clarity — Apakah satu orang membaca akan paham?
-  [x] Measurability — Apakah ada metrik kuantitatif?
-  [x] Relevance — Apakah penting untuk domain?
-  [x] Testability — Apakah bisa gagal?
-  [x] Impact — Apakah ada kontribusi jika terjawab?
+**Problem Quality Check**
+- [x] **Clarity** — Masalah terdefinisi jelas melalui komparasi teknis dua DBMS[cite: 10, 15].
+- [x] **Measurability** — Mengukur waktu respons secara kuantitatif dalam milidetik[cite: 170, 173].
+- [x] **Relevance** — Krusial untuk efektivitas penggunaan aplikasi kesehatan balita[cite: 35, 62].
+- [x] **Testability** — Dapat diuji melalui eksperimen batch 50 kali pengulangan[cite: 117, 136].
+- [x] **Impact** — Memberikan bukti empiris bagi pengembang dalam memilih infrastruktur backend[cite: 17, 304].
 
-Problem Statement (1 paragraf):
-  Model Deep Learning seperti LSTM sering kali mengalami kendala dalam menangkap pola volatilitas pasar yang kompleks karena pemilihan hyperparameter yang tidak optimal. Riset ini mengusulkan algoritma hybrid yang mengintegrasikan Genetic Algorithm untuk mengoptimasi arsitektur LSTM. Kontribusi utama dari penelitian ini adalah meningkatkan akurasi prediksi harga saham dengan menurunkan nilai MAE hingga 2.41 dan mencapai nilai R² sebesar 0.87, sehingga menghasilkan sistem prediksi yang lebih andal bagi investor di pasar modal.
+**Problem Statement (1 paragraf):**
+Pemilihan DBMS yang tepat sangat menentukan responsivitas aplikasi mobile nutrisi balita, di mana waktu respons yang lambat dapat mengganggu efektivitas orang tua dalam memantau gizi anak. Meskipun MySQL merupakan database relasional yang populer, ia memiliki kendala skalabilitas, sementara Firebase Realtime Database menawarkan sinkronisasi otomatis namun terbatas pada kueri sederhana[cite: 42, 44, 109]. [cite_start]Penelitian ini berfokus pada perbandingan kinerja waktu respons operasi CRUD antara Firebase dan MySQL menggunakan uji Wilcoxon Signed-Rank untuk mengatasi masalah distribusi data yang tidak normal. Hasil penelitian ini memberikan kontribusi berupa bukti empiris bahwa Firebase memiliki performa lebih baik, sehingga menyederhanakan proses pengembangan aplikasi mobile yang membutuhkan data *real-time*.
 ```
-
 ---
 
 ## Latihan 1 — Dari Topik ke Masalah Riset
 
-Pilih satu topik di bidang TI yang diminati. Transformasikan melalui 5 tahap Problem Formation Model.
-
-**Topik awal:** ________________________________________
+**Topik awal**: Perbandingan Performa Database Relasional dan NoSQL pada Aplikasi Mobile.
 
 | Tahap | Hasil |
 |-------|-------|
-| Reality | Pasar saham bersifat dinamis dan kompleks  |
-| Observed Issue (Symptom) | Model prediksi tradisional memiliki akurasi rendah dan gagal mengikuti tren|
-| Diagnosed Problem (Root Cause) |Hyperparameter LSTM tidak optimal dan sulit ditentukan secara manual |
-| Researchable Problem |Optimasi hyperparameter LSTM menggunakan GA untuk prediksi harga saham  |
-| Measurable Variable |Nilai RMSE, MAE, R² |
+| **Reality** |Sistem manajemen basis data (DBMS) diperlukan untuk mengelola pengolahan data yang saling terkait di dunia modern[cite: 24, 25, 32]. |
+| **Observed Issue (Symptom)** | [cite_start]Pengguna menginginkan program aplikasi yang mampu memberikan waktu respons yang cepat demi efektivitas kerja[cite: 34, 35]. |
+| **Diagnosed Problem (Root Cause)** | [cite_start]MySQL memiliki kekurangan dalam hal skalabilitas dan biaya logging, sedangkan Firebase memiliki kendala dalam migrasi dan kueri data kompleks[cite: 42, 44]. |
+| **Researchable Problem** | [cite_start]Uji komparasi waktu respons operasional CRUD antara Firebase Realtime Database dan MySQL menggunakan uji statistik Wilcoxon Signed-Rank[cite: 10, 16]. |
+| **Measurable Variable** | [cite_start]Waktu respons database dalam milidetik dan nilai signifikansi (p-value) hasil uji Wilcoxon[cite: 16, 170, 198]. |
 
-**Apakah terjebak solution-first thinking?** [ ] Ya / [x] Tidak
-> Jika ya, kembali ke tahap mana? ________________________
+**Apakah terjebak solution-first thinking?** [x] Tidak
+> [cite_start]Karena riset ini berfokus pada pengujian dan pembuktian performa komparatif antara dua teknologi, bukan langsung menentukan solusi tanpa evaluasi empiris[cite: 16, 45].
 
 ---
 
 ## Latihan 2 — System Context Decomposition
 
-Gambarkan konteks sistem dari masalah riset di Latihan 1.
-
 | Komponen | Deskripsi |
 |----------|----------|
-| Input | Data historis OHLC (Open, High, Low, Close)|
-| Process |Seleksi, crossover, dan mutasi GA untuk mencari parameter LSTM terbaik |
-| Output | Nilai prediksi harga saham di masa depan |
-| Outcome | Prediksi yang konsisten dengan tren harga aktual |
-| Constraints | Data yang fluktuatif dan kebutuhan generalization ability |
-| Stakeholders | investor dan Analis Keuangan |
+| **Input** | Data nutrisi balita (berat, usia, skor gizi) dalam format SQL atau JSON[cite: 132]. |
+| **Process** | Eksekusi metode INSERT/setValue, SELECT/ValueEventListener, UPDATE, dan DELETE sebanyak 50 kali[cite: 140, 143, 147, 150]. |
+| **Output** | Data waktu respons dalam milidetik dan hasil uji hipotesis $H_{0}$ vs $H_{1}$[cite: 170, 195]. |
+| **Outcome** | Konfirmasi bahwa Firebase Realtime Database lebih cocok untuk aplikasi nutrisi balita karena waktu respons lebih baik[cite: 17, 301]. |
+| **Constraints** | Dataset pengujian dibatasi dari 1 hingga 3.000 rekaman dan harus dijalankan pada Android 9.0[cite: 124, 136]. |
+| **Stakeholders** | Komunitas dan Pemerintah yang berupaya mengatasi masalah malnutrisi balita melalui teknologi[cite: 61, 62]. |
 
-**Komponen mana yang paling relevan dengan masalah riset?** Process (karena di tahap ini GA melakukan evolusi untuk mencari solusi optimal bagi LSTM).
+**Komponen mana yang paling relevan dengan masalah riset?** **Process** (karena pada tahap inilah operasi CRUD diukur dan diuji secara statistik untuk membuktikan perbedaan performa)[cite: 116, 117, 164].
+
 ---
 
 ## Latihan 3 — Problem Quality Check
 
-Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
-
 | Kriteria | Skor (1-5) | Justifikasi |
 |----------|-----------|-------------|
-| Clarity | 5 | Masalah sangat spesifik dan terdefinisi|
-| Measurability |5 |Metrik performa (MAE/RMSE) sangat standar di literatur |
-| Relevance | 4| Penting untuk mendukung keputusan finansial |
-| Testability |4 |Eksperimen dilakukan dengan dataset historis |
-| Impact |4 |Memberikan metode yang lebih generalizable  |
+| **Clarity** | 5 | Masalah riset diformulasikan secara spesifik membandingkan dua DBMS melalui tes statistik[cite: 10, 16]. |
+| **Measurability** | 5 | Menggunakan metrik waktu milidetik dan p-value yang sangat terukur[cite: 170, 198]. |
+| **Relevance** | 5 | Sangat relevan untuk mengatasi masalah malnutrisi melalui aplikasi yang responsif[cite: 61, 62]. |
+| **Testability** | 5 | Eksperimen dapat diulang (reproducible) dengan konfigurasi perangkat keras dan perangkat lunak yang terdokumentasi[cite: 121, 126, 130]. |
+| **Impact** | 4 |Membantu pengembang mempercepat proses pembuatan aplikasi tanpa backend expertise yang mendalam[cite: 44, 304]. |
 
-**Skor total:** 22 / 25
+**Skor total**: 24 / 25
 
 **Problem statement versi final (1 paragraf):**
-Penelitian ini berfokus pada optimasi model Time Series untuk prediksi harga saham di tengah kompleksitas data pasar keuangan. Dengan menggunakan pendekatan hibrida Genetic Algorithm (GA) untuk melakukan tuning hyperparameter pada Long Short-Term Memory (LSTM), riset ini berhasil mengatasi masalah ketidakstabilan model standar. Hasil eksperimen menunjukkan bahwa model ini mampu menekan tingkat kesalahan prediksi (MAE 2.41) dan memiliki tingkat konsistensi yang tinggi dengan tren harga aktual, sehingga memberikan kontribusi signifikan bagi analisis pasar modal modern.
+Penelitian ini bertujuan untuk menentukan DBMS yang paling efektif antara Firebase Realtime Database dan MySQL untuk mendukung aplikasi mobile pemantauan gizi balita, mengingat pentingnya waktu respons cepat bagi pengalaman pengguna. Masalah utama terletak pada perbedaan arsitektur (Relasional vs NoSQL) yang mempengaruhi kecepatan operasi CRUD dasar, di mana MySQL memiliki keterbatasan pada skalabilitas sedangkan Firebase pada kompleksitas kueri. Melalui eksperimen 50 iterasi pada data 1-3.000 rekaman, riset ini menggunakan uji statistik Wilcoxon Signed-Rank untuk membuktikan hipotesis keunggulan performa.Hasilnya secara signifikan menunjukkan bahwa Firebase memberikan respons yang lebih cepat, menjadikannya solusi yang direkomendasikan untuk menyederhanakan pengembangan aplikasi kesehatan masyarakat yang membutuhkan sinkronisasi data seketika.
 
 ---
 
 ## Refleksi
 
-> Bandingkan "masalah" yang biasa ditemui saat coding (bug, error) dengan masalah riset. Apa perbedaan fundamental dalam cara mendefinisikan dan mendekati keduanya?
-
 **Jawaban:**
->Perbedaan fundamental terletak pada tujuan akhirnya. Coding (Bug/Error) bertujuan untuk mengembalikan sistem ke perilaku yang seharusnya (correctness), di mana ada kondisi "benar" dan "salah". Sedangkan Riset bertujuan untuk mencari jawaban atas gap pengetahuan atau mencari efisiensi yang lebih baik (optimality). Dalam riset, kita tidak memperbaiki sistem yang rusak, melainkan menguji hipotesis untuk menciptakan metode yang lebih unggul dibandingkan metode yang ada sebelumnya.
+Perbedaan fundamental antara masalah *coding* (bug/error) dan masalah riset terletak pada tujuan dan pendekatannya. Dalam *coding*, masalah didefinisikan sebagai kegagalan sistem untuk memenuhi fungsinya (misalnya error koneksi database), dan pendekatannya bersifat teknis untuk segera memperbaiki agar sistem berjalan kembali (*engineering*). Sebaliknya, masalah riset didefinisikan sebagai kesenjangan pengetahuan (*gap*), di mana kita tidak sekadar memperbaiki sistem, tetapi berupaya memahami dan membuktikan klaim secara empiris (misalnya, membuktikan *mengapa* atau *apakah* satu database lebih cepat dari yang lain). Masalah riset menuntut batasan yang jelas agar variabelnya terukur dan hasilnya dapat divalidasi secara statistik, sehingga menghasilkan pengetahuan baru yang dapat digeneralisasi, bukan sekadar solusi teknis sekali pakai[cite: 16, 164, 302].
