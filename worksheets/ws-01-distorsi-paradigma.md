@@ -82,33 +82,27 @@ Tanggal          : 19 april 2026
 
 Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan performa." Telusuri setiap tahap Research Trust Model.
 
-<<<<<<< HEAD
-**Paper yang dipilih:**
-> Judul: Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
-> Penulis (Tahun):Maulana Muhamad Faisal, et al. (2026)
-=======
-**Paper yang dipilih:** Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
-> Judul: Analisis Tren Penelitian Sistem Informasi dalam Satu Dekade Terakhir
-> Penulis (Tahun):Maulana Muhamad Faisal, et al. (2026)
+## Latihan 1 — Identifikasi Distorsi
 
->>>>>>> f4aeacabf62ac0b80f4c3b12b329baa959ccd9b2
+**Paper yang dipilih:**
+> Judul: The Comparison Firebase Realtime Database and MySQL Database Performance using Wilcoxon Signed-Rank Test.
+> Penulis (Tahun): Margaretha Ohyver, Jurike V. Moniaga, Iwa Sungkawa, Bonifasius Edwin Subagyo, Ian Argus Chandra (2019). 
+> Sumber/Link DOI:[ A Survey of Comparing Different Cloud Database Performance: SQL and 
+NoSQL .](https://passer.garmian.edu.krd/article_144858_1e6abc0a4244575a38a400834e2cfd20.pdf)
+
 | Tahap | Apa yang Dilakukan | Potensi Distorsi |
 |-------|-------------------|-----------------|
-| Reality → Data | Mengumpulkan 870 rekaman dari 4 database | Bias cakupan database (tidak semua riset masuk ke PubMed/Scopus) |
-| Data → Processing |Menghapus duplikasi dan menyaring berdasarkan kriteria  |Subjektivitas dalam menentukan relevansi topik |
-| Processing → Analysis |Ekstraksi data dari 125 laporan |Bias konfirmasi terhadap tren populer (AI/Big Data) |
-| Analysis → Inference |Sintesis hasil menjadi tema strategis |Generalisasi yang terlalu luas dari hanya 10 studi terpilih |
-| Inference → Knowledge |Memberikan rekomendasi untuk masa depan |Mengabaikan riset lokal yang tidak terindeks internasional |
-<<<<<<< HEAD
+| Reality → Data | Mengumpulkan data waktu respons dari 50 kali pengujian operasi CRUD dengan rentang beban hanya 1 hingga 3.000 rekaman data[cite: 136]. | *Scale Bias* (Bias Skala): Beban maksimal yang hanya 3.000 rekaman belum tentu merepresentasikan kondisi kemacetan (*bottleneck*) di dunia nyata saat aplikasi digunakan serentak oleh puluhan ribu pengguna. |
+| Data → Processing | Menggunakan struktur tabel yang sangat sederhana, yakni hanya menggunakan satu tabel yang memuat enam bidang (*fields*) profil nutrisi balita[cite: 132]. | *Construct Bias*: Tidak ada pengujian relasi tabel (seperti *JOIN*), padahal manajemen data relasional adalah fitur utama dan kekuatan dari MySQL dibandingkan Firebase[cite: 101, 102, 103, 104]. |
+| Processing → Analysis | Menggunakan uji Wilcoxon Signed-Rank untuk membandingkan rata-rata waktu respons, dijalankan pada perangkat klien Android tingkat tinggi (Snapdragon 845, RAM 6 GB)[cite: 10, 127]. | *Hardware Bias*: Spesifikasi perangkat klien yang terlalu tinggi mungkin mempercepat pemrosesan data di sisi klien, sehingga menutupi performa pengiriman data murni dari server. |
+| Analysis → Inference | Menyimpulkan bahwa Firebase lebih unggul di seluruh operasi CRUD berdasarkan data waktu uji[cite: 295]. | *Confirmation Bias*: Penulis sebelumnya mengakui bahwa kelemahan Firebase adalah saat melakukan *query* kompleks , namun mereka sengaja menyimpulkan keunggulannya hanya dari pengujian data yang sangat simpel[cite: 299]. |
+| Inference → Knowledge | Mengklaim dan merekomendasikan bahwa Firebase lebih cocok (*more suitable*) sebagai sistem database untuk aplikasi kebutuhan nutrisi harian[cite: 301]. | *Overgeneralization*: Kesimpulan ini hanya sah untuk aplikasi dengan skema data datar[cite: 299]. Jika aplikasi berkembang dan membutuhkan relasi data rumit, rekomendasi ini bisa menyesatkan. |
 
-**Distorsi paling besar di tahap:** ________________________
-=======
->>>>>>> f4aeacabf62ac0b80f4c3b12b329baa959ccd9b2
+**Distorsi paling besar di tahap:** Data → Processing
 
-**Distorsi paling besar di tahap:** Inference → Knowledge
 **Dua distorsi spesifik yang teridentifikasi:**
-1. Selection Bias: Pemilihan hanya 10 studi dari 870 awal menciptakan risiko hasil yang tidak sepenuhnya representatif terhadap seluruh lanskap SI.
-2. Geographical Bias: Fokus riset yang dianalisis mungkin condong ke wilayah yang lebih dominan dalam database internasional, mengabaikan nuansa riset di negara berkembang.
+1. **Construct Validity (Complexity Bias):** Pengujian membandingkan MySQL yang merupakan *Relational Database* [cite: 40] dengan NoSQL, namun tidak mengikutsertakan skenario kueri relasional yang kompleks[cite: 132].Hal ini adalah perbandingan yang tidak setara (*straw man comparison*), karena MySQL diuji pada skenario yang tidak menonjolkan fitur utamanya[cite: 111, 112].
+2. **External Validity (Scale Bias):** Pengujian dibatasi secara ketat maksimal 3.000 rekaman. Klaim performa waktu respons ini akan sangat sulit digeneralisasi untuk aplikasi berbasis *cloud* skala masif yang menampung ratusan ribu data pengguna, mengingat MySQL rentan pada masalah skalabilitas[cite: 42]..
 ---
 
 ## Latihan 2 — Analisis Kasus Etika
@@ -117,26 +111,28 @@ Skenario: Seorang peneliti menemukan bahwa jika 3 data point outlier dihapus, ha
 
 | Perspektif | Analisis |
 |------------|---------|
-| Kejujuran ilmiah | Laporkan kedua versi (dengan dan tanpa outlier). Jangan melakukan p-hacking atau memanipulasi data hanya untuk mencapai signifikansi statistik.|
-| Transparansi |Jelaskan prosedur identifikasi dan alasan penghapusan outlier secara eksplisit di bagian metodologi. Jika data dihapus, harus ada justifikasi statistik yang valid, bukan sekadar agar hasil tampak signifikan |
-| Peer review | Reviewer akan menuntut objektivitas. Jika outlier dihapus tanpa alasan yang kuat, ini akan dianggap sebagai bentuk manipulasi data yang dapat merusak kredibilitas riset.|
+| Kejujuran ilmiah | Menghapus data semata-mata untuk mencapai tingkat signifikansi statistik (*p-value* < 0.05) adalah bentuk manipulasi data yang disebut *p-hacking*. Secara etika, peneliti wajib menyajikan kebenaran dari apa yang sebenarnya terjadi selama eksperimen, bukan apa yang "diharapkan" terjadi. |
+| Transparansi | Jika peneliti memiliki alasan teknis yang kuat bahwa ke-3 *outlier* tersebut adalah *noise* akibat kerusakan alat ukur atau kesalahan *input*, maka penghapusannya dapat dibenarkan asalkan **dijelaskan secara sangat transparan dan rinci** di dalam bab metodologi laporan. Menyembunyikan fakta penghapusan data ini adalah pelanggaran berat. |
+| Peer review | Asesor atau *reviewer* jurnal yang kritis pasti akan menyadari adanya anomali atau data yang hilang. Jika peneliti tidak mencantumkan justifikasi ilmiah yang valid mengapa 3 titik data tersebut dibuang, *reviewer* akan menganggap riset tersebut cacat metodologi dan paper berisiko besar ditolak (*rejected*). |
 
 **Keputusan akhir dan justifikasi:**
-> Keputusan: Melaporkan analisis dengan menyertakan seluruh data (full dataset) sebagai temuan utama. Jika peneliti tetap ingin menghapus outlier, maka wajib menyertakan analisis sensitivitas (membandingkan hasil dengan dan tanpa outlier) dalam laporan/paper.
-Justifikasi: Integritas dan ketelitian metodologis jauh lebih penting daripada nilai signifikansi statistik semata. Proses riset harus dilakukan secara objektif untuk menghindari bias, sesuai dengan prinsip dasar tinjauan sistematis yang dapat dipertanggungjawabkan.
+> **Keputusan:** Melaporkan hasil eksperimen menggunakan kumpulan data lengkap (*full dataset*), termasuk ke-3 *outlier* tersebut, sebagai temuan utama (*primary findings*). 
+> 
+> **Justifikasi:** Integritas dan objektivitas ilmiah jauh lebih berharga daripada sekadar mengejar status "signifikan". Jika saya merasa *outlier* tersebut memang mendistorsi performa sistem yang sebenarnya, saya akan menambahkan sub-bab **Analisis Sensitivitas**. Di sana, saya akan menyajikan data perbandingan hasil eksperimen *dengan* dan *tanpa* outlier secara berdampingan, serta membiarkan pembaca dan komunitas ilmiah menilai sendiri seberapa *robust* (tangguh) sistem yang saya uji.
 ---
 
 ## Latihan 3 — Posisi Paradigma
 
-**Topik riset:** Tren Penelitian Siste
+[cite_start]**Topik riset:** Perbandingan Kinerja Firebase Realtime Database dan MySQL Database menggunakan Uji Wilcoxon Signed-Rank 
+
 | Kriteria | Positivis | Interpretivis | Design Science |
 |----------|-----------|---------------|----------------|
-| Kesesuaian dengan topik (1–5) |4 | 2 | 5 |
-| Jenis data yang dikumpulkan |Data terukur (jumlah paper) |Pemahaman mendalam tren |Solusi/rekomendasi strategis |
-| Limitasi paradigma | Kurang menangkap konteks sosial|Sulit digeneralisasi |Fokus pada hasil, bukan proses |
+| Kesesuaian dengan topik (1–5) | 5 — Sangat sesuai. et ini menguji hipotesis komparasi performa secara matematis dan objektif[cite: 164, 195, 196, 197]. | 1 — Sama sekali tidak relevan karena tidak ada kajian sosial atau wawancara subjektif. | 3 — Kurang dominan. Meskipun melibatkan aplikasi *mobile*, fokus inti paper ini adalah *evaluasi/komparasi* produk yang sudah ada, bukan merancang inovasi arsitektur *database* baru[cite: 15, 16]. |
+| Jenis data yang dikumpulkan | Waktu respons (*response time*) dalam satuan milidetik dari 50 kali iterasi eksekusi operasi CRUD (Create, Read, Update, Delete)[cite: 117, 136, 170]. | Pemahaman kualitatif (misal: wawancara *developer* tentang seberapa mudah menggunakan Firebase vs MySQL). | Artefak berupa *script benchmark* atau purwarupa aplikasi pemantau gizi balita[cite: 63, 116]. |
+| Limitasi paradigma | Hanya melihat angka performa kecepatan secara isolatif, mengabaikan aspek seperti kesulitan pemeliharaan sistem, biaya *server* jangka panjang, atau fleksibilitas kueri[cite: 42, 44, 298]. | Sulit untuk menarik kesimpulan yang solid mengenai performa perangkat lunak karena tidak ada metrik yang bisa diukur dengan standar pasti. | Terlalu fokus pada hasil akhir (aplikasi jadi), sehingga evaluasi ketat mengenai performa infrastruktur *database* di balik layar bisa saja terabaikan. |
 
-**Paradigma yang dipilih:** Positivis (dalam tahap identifikasi/kuantitatif) dan Design Science (dalam tahap pemberian rekomendasi).
-**Alasan:**Paper ini berupaya mengukur tren secara sistematis (kuantitatif) dan memberikan saran praktis (solusi) untuk pengembangan Sistem Informasi di masa depan.
+**Paradigma yang dipilih:** Positivis
+**Alasan:** Penelitian ini bertumpu pada observasi empiris yang terukur secara kuantitatif melalui eksperimen yang terkontrol secara ketat (mengeksekusi rentang data 1 hingga 3.000 rekaman).Penggunaan uji statistik formal (Wilcoxon Signed-Rank) untuk membuktikan H0 dan H1 [cite: 164, 195, 196, 197] merupakan karakteristik absolut dari paradigma Positivis yang memandang fenomena IT bisa diukur kebenarannya secara sangat objektif.
 ---
 
 ## Refleksi
@@ -144,8 +140,9 @@ Justifikasi: Integritas dan ketelitian metodologis jauh lebih penting daripada n
 > Sebelum membaca materi ini, apakah pernah mempertanyakan klaim "95% akurat"? Setelah memahami rantai distorsi, pertanyaan apa yang sekarang akan diajukan saat membaca paper?
 
 **Jawaban:**
-<<<<<<< HEAD
->Setelah memahami rantai distorsi, saat membaca paper riset, pertanyaan yang akan saya ajukan sekarang adalah: "Apakah penulis menyertakan diagram alur seleksi data yang transparan, dan apakah mereka mengakui keterbatasan (limitasi) dari sampel yang digunakan?" Saya kini sadar bahwa klaim "95% akurat" tidak ada artinya jika proses filtering data di awal tidak dilakukan dengan sangat objektif dan terdokumentasi.
-=======
->Setelah memahami rantai distorsi, saat membaca paper riset, pertanyaan yang akan saya ajukan sekarang adalah: "Apakah penulis menyertakan diagram alur seleksi data yang transparan, dan apakah mereka mengakui keterbatasan (limitasi) dari sampel yang digunakan?" Saya kini sadar bahwa klaim "95% akurat" tidak ada artinya jika proses filtering data di awal tidak dilakukan dengan sangat objektif dan terdokumentasi.
->>>>>>> f4aeacabf62ac0b80f4c3b12b329baa959ccd9b2
+> Sebelum membaca materi ini, saya cenderung menerima mentah-mentah klaim kuantitatif seperti "95% akurat" atau "Metode A lebih unggul dari Metode B". Saya dulu menganggap bahwa setiap angka yang berhasil menembus publikasi jurnal adalah sebuah kebenaran mutlak. Saya tidak menyadari bahwa "pengetahuan" tersebut adalah hasil akhir dari rantai transformasi (*Reality → Data → Processing → Analysis → Inference*) yang di setiap tahapnya sangat rawan disusupi bias atau distorsi.
+> 
+> Setelah memahami rantai distorsi, cara saya membaca paper berubah total. Saat melihat klaim performa tinggi, pertanyaan utama yang sekarang akan saya ajukan adalah:
+> 1. **Bagaimana data tersebut dikumpulkan dan seberapa realistis skalanya?** (Untuk mendeteksi *Scale Bias* atau *Sampling Bias*).
+> 2. **Apakah metode pembanding (*baseline*) diperlakukan secara adil?** (Untuk mendeteksi *Construct Bias*, memastikan bahwa peneliti tidak sedang melakukan *straw man comparison* hanya agar metode usulannya terlihat bagus).
+> 3. **Apakah kesimpulan akhirnya lompat terlalu jauh dari hasil analisisnya?** (Untuk mendeteksi *Overgeneralization*, memastikan klaimnya jujur dan sesuai dengan batasan eksperimen).
