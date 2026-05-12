@@ -59,111 +59,95 @@ Membandingkan deep learning 2024 dengan decision tree sederhana tanpa justifikas
 ## Template A.3 — Literature Mapping & Gap Identification
 
 ```
-LITERATURE MAPPING
+RQ-CONTRIBUTION-HYPOTHESIS
 
-Topik      : Optimasi Hyperparameter LSTM menggunakan Genetic Algorithm untuk Prediksi Harga Saham
-Database   : IEEE Xplore, Google Scholar, Scopus
-Query      : ("Stock Price Prediction" OR "Financial Time Series") AND "LSTM" AND ("Genetic Algorithm" OR "Hyperparameter Optimization")
-Tahun      : 2018 - 2024
-Hasil awal : 45 paper → Screening → 5 paper final
+Gap Statement  : Meskipun penelitian sebelumnya telah membandingkan performa database, terdapat kesenjangan dalam pengujian statistik yang ketat untuk data yang tidak terdistribusi normal pada aplikasi kesehatan mobile. Mayoritas riset hanya berfokus pada efisiensi tanpa membuktikan secara signifikan apakah perbedaan waktu respons tersebut benar-benar nyata (significant) pada operasi CRUD dasar untuk skema data nutrisi balita.
 
-Literature Matrix (concept-centric):
+Research Question:
+  Tipe         : [x] Comparison  [ ] Improvement  [ ] Exploratory
+  Formulasi    : Apakah terdapat perbedaan waktu respons yang signifikan secara statistik antara Firebase Realtime Database dan MySQL Database saat melakukan operasi CRUD (Create, Read, Update, Delete) pada aplikasi mobile "Toddlers Daily Nutritional Needs"?
+  Variabel IV  : Jenis Database Management System (Firebase Realtime Database vs MySQL Database).
+  Variabel DV  : Performa waktu respons (Response Time).
+  Metrik       : Milidetik (ms).
+  Dataset      : 50 kali iterasi eksperimen per batch operasi pada rentang 1 hingga 3.000 rekaman data nutrisi.
+  Baseline     : Performa MySQL Database sebagai standar RDBMS yang umum digunakan.
 
-| Study | Tahun | Method | Data | Result | Limitation |
-|-------|-------|--------|------|--------|------------|
-| Siami-Namini et al. | 2018 | ARIMA vs LSTM | Indeks S&P 500 | LSTM mengungguli ARIMA (RMSE turun 85%) | Konfigurasi hyperparameter LSTM dilakukan secara default/manual |
-| Chung & Shin | 2018 | GA-LSTM | KOSPI (Korea) | Akurasi GA-LSTM lebih tinggi dibanding LSTM standar | Waktu komputasi sangat tinggi, ruang pencarian parameter belum dibatasi |
-| Haider et al. | 2022 | ANN, CNN, LSTM | Solar/Time Series | LSTM unggul di horizon waktu 1-3 jam (R² 0.98) | Gagal menangkap volatilitas untuk prediksi jangka panjang (>6 jam) |
-| Dhake et al. | 2023 | HBO & GA - LSTM | Time Series (Irradiance) | GA & HBO menurunkan RMSE hingga 53.42% | Data dekomposisi frekuensi tinggi (noise) tetap sulit diprediksi |
-| Sha, Xinye | 2024 | GA-LSTM | Mastercard Stock (OHLC) | MAE 2.41, R² 0.87, sangat fit dengan tren | Diuji pada single stock (studi kasus tunggal), belum diuji lintas sektor |
+Quality Check RQ:
+  [x] Variabel spesifik
+  [x] Metrik jelas
+  [x] Baseline ada
+  [x] Konteks disebutkan
+  [x] Memerlukan eksperimen (bukan hanya survei literatur)
 
-Pola yang ditemukan:
-  Metode dominan     : Long Short-Term Memory (LSTM) sebagai baseline, dikombinasikan dengan algoritma optimasi (GA).
-  Dataset umum       : Data historis harga penutupan (Close) atau OHLCV saham-saham Blue Chip/Indeks global.
-  Limitasi berulang  : Model LSTM sensitif terhadap perubahan parameter, dan optimasi manual sering terjebak di local optima. Seringkali model kesulitan menghadapi data berfrekuensi tinggi (noise market).
+Contribution Statement:
+  Apa yang baru diketahui : Bukti empiris melalui uji Wilcoxon Signed-Rank bahwa Firebase memiliki performa waktu respons yang lebih unggul dibandingkan MySQL untuk aplikasi mobile dengan skema data sederhana.
+  Jenis kontribusi        : [x] Comparison  [ ] Improvement  [ ] Novel approach
+  Gap yang diisi          : Mengisi celah perbandingan performa antara database NoSQL cloud-hosted dan SQL tradisional pada platform Android 9.0 untuk data kesehatan masyarakat.
 
-GAP IDENTIFICATION
-
-Gap 1: [Jenis: Performance & Method Gap]
-  Deskripsi    : Penentuan hyperparameter LSTM secara manual (trial-and-error) menghasilkan performa yang tidak stabil dan gagal menggeneralisasi volatilitas pasar yang tinggi.
-  Bukti        : Siami-Namini (2018) dan Haider (2022) mencatat penurunan akurasi pada LSTM standar saat menghadapi data fluktuatif, sementara Sha (2024) dan Dhake (2023) membuktikan perlunya algoritma pencarian global (GA) untuk menekan error.
-  Signifikansi : Mengotomatisasi tuning parameter akan menghasilkan arsitektur AI yang lebih efisien dan andal untuk sistem trading otomatis atau analisis kuantitatif.
-
-Gap 2: [Jenis: Context & Data Gap]
-  Deskripsi    : Mayoritas studi (seperti Sha, 2024) hanya menguji model hybrid pada saham tunggal berkapitalisasi raksasa (misal: Mastercard) atau indeks negara maju (S&P 500).
-  Bukti        : Tabel literatur menunjukkan dominasi dataset pasar maju. Belum ada pengujian ketat komparasi GA-LSTM pada saham-saham di pasar berkembang (Emerging Markets) yang memiliki karakteristik volatilitas dan manipulasi yang berbeda.
-  Signifikansi : Menjawab pertanyaan apakah model ini cukup robust untuk diterapkan sebagai instrumen analisis bagi investor ritel di ekosistem bursa lokal (seperti edukasi literasi keuangan di KSPM).
-
-Baseline Selection:
-| Baseline         | Relevansi                           | Representatif                          | Source              |
-|------------------|-------------------------------------|----------------------------------------|---------------------|
-| LSTM (Standar)   | Task sama: Prediksi deret waktu.    | Mewakili "common practice" deep learning tanpa optimasi eksternal. | Siami-Namini (2018) |
-| ARIMA            | Task sama: Prediksi deret waktu.    | Mewakili standar emas metode statistika tradisional di pasar modal. | Siami-Namini (2018) |
+Hypothesis Pair:
+  H₀ : Performa waktu respons Firebase Realtime Database dalam melakukan operasi CRUD lebih buruk daripada atau sama dengan MySQL Database.
+  H₁ : Performa waktu respons Firebase Realtime Database dalam melakukan operasi CRUD lebih baik daripada MySQL Database.
+  Threshold              : p-value < 0.05
+  Justifikasi threshold  : Nilai alpha 0.05 adalah standar emas dalam penelitian komputasi untuk menolak hipotesis nol dengan tingkat kepercayaan 95%.
 ```
 
 ---
-
-## Latihan 1 — Concept-Centric Literature Table
-
-Gunakan topik riset dari WS-02. Cari minimal 5 paper relevan menggunakan Google Scholar atau database lain.
-
-
-**Topik riset:** Prediksi Harga Saham menggunakan Hybrid GA-LSTM
-**Query pencarian:** `"Stock Price" AND "LSTM" AND "Genetic Algorithm"`
-**Database:** Google Scholar, IEEE Xplore
-
-| # | Study | Tahun | Method | Dataset | Result | Limitasi |
-|---|-------|-------|--------|---------|--------|----------|
-| 1 | *Siami-Namini et al.* | 2018 | ARIMA vs LSTM | S&P 500 | LSTM > ARIMA (RMSE LSTM jauh lebih rendah) | *Hyperparameter* tidak dioptimasi (default) |
-| 2 | *Chung & Shin* | 2018 | GA-LSTM | KOSPI | GA-LSTM mengalahkan model standar | Konfigurasi GA memakan *resource* besar |
-| 3 | *Dhake et al.* | 2023 | GA & HBO - LSTM | Time Series Data | Error (RMSE) turun 53.42% dengan optimasi | Kesulitan memprediksi sinyal *noise* tinggi |
-| 4 | *Sha, Xinye* | 2024 | GA-LSTM | Saham Mastercard | MAE 2.41, R² 0.87 (sangat konvergen) | Hanya divalidasi pada satu instrumen saham |
-| 5 | *Zhao et al.* | 2023 | VMD-LSTM/GRU | Time Series | Model hybrid lebih baik tangani data non-stasioner | Ruang lingkup bukan data finansial murni |
-
-**Pola yang terlihat — Metode dominan:** Penggunaan LSTM sebagai prosesor *time-series* utama, dipadukan dengan algoritma metaheuristik (GA) untuk *tuning*.
-**Limitasi yang berulang:** Tantangan *computational cost* saat iterasi evolusi GA dan kesulitan model saat data terlalu *noisy* (fluktuasi harian yang acak).
-
-**Pola yang terlihat — Metode dominan:** ___________________
-**Limitasi yang berulang:** ______________________________
+# WS-05: Variabel & Metrik
 
 ---
 
-## Latihan 2 — Gap Identification
+## Latihan 1 — Operationalization Chain
 
-Berdasarkan tabel di Latihan 1, identifikasi gap.
+**RQ:** Apakah Firebase Realtime Database memberikan waktu respons yang secara signifikan lebih cepat dibandingkan MySQL Database pada operasi CRUD di aplikasi "Toddlers Daily Nutritional Needs"?
 
-| Jenis Gap | Ditemukan? | Gap Statement |
-|-----------|-----------|---------------|
-| Performance Gap | [x] Ya / [ ] Tidak | Akurasi prediksi LSTM standar terdegradasi drastis saat menghadapi volatilitas ekstrem karena terjebak *local optima*. |
-| Method Gap | [x] Ya / [ ] Tidak | Mayoritas peneliti masih menggunakan *grid search* atau *manual tuning* yang tidak efisien untuk menemukan arsitektur LSTM terbaik. |
-| Data Gap | [ ] Ya / [x] Tidak | Dataset OHLC sangat melimpah, tidak ada kekurangan data secara kuantitas. |
-| Context Gap | [x] Ya / [ ] Tidak | Evaluasi GA-LSTM pada indeks pasar saham berkembang (Emerging Markets) yang memiliki anomali harga berbeda masih sangat terbatas. |
+| Variabel | Tipe | Konsep Abstrak | Metrik Konkret | Skala (NOIR) | Satuan |
+|----------|------|---------------|----------------|-------------|--------|
+| Jenis DBMS | IV | Arsitektur penyimpanan data | Firebase vs MySQL | Nominal | — |
+| Kecepatan Sistem | DV | Efisiensi waktu akses | Response Time (Waktu Respons) | Ratio | Milidetik (ms) |
+| Beban Data | CV | Volume pemrosesan | Jumlah rekaman data (1 - 3.000) | Ratio | Rekaman (Records) |
+| Operasi Basis Data | CV | Standar interaksi data | Fungsi CRUD (Create, Read, Update, Delete) | Nominal | — |
 
-**Gap utama yang dipilih:** Kombinasi **Method Gap** dan **Context Gap** (Implementasi algoritma pencarian global GA untuk menutupi kelemahan *tuning* manual LSTM, dievaluasi pada dataset pasar saham berkembang/lokal).
+**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [x] Tidak
+> Rantai sudah selaras karena "Kecepatan Sistem" secara teknis diukur melalui durasi waktu respons dari saat permintaan dikirim hingga diterima kembali oleh server.
 
-**Mengapa gap ini penting (bukan sekadar "belum ada yang meneliti")?**
-> Karena pergerakan pasar saham tidak linear. Menggunakan parameter *default* pada AI bisa berakibat fatal berupa kerugian finansial. Mengisi gap ini tidak hanya menyumbang arsitektur perangkat lunak yang lebih efisien di sisi akademis, tetapi juga menyediakan instrumen keputusan (*outcome*) yang lebih *reliable* bagi *stakeholders* (investor ritel).
 ---
 
-## Latihan 3 — Baseline Selection
+## Latihan 2 — Evaluasi Metrik
 
-Pilih 2 baseline dari literatur yang sudah dibaca.
+Evaluasi metrik DV (Response Time) yang dipilih di Latihan 1 menggunakan 3 kriteria.
 
-| # | Baseline | Mengapa Relevan | Mengapa Representatif | Apakah SOTA? | Sumber |
-|---|----------|----------------|----------------------|-------------|--------|
-| 1 | Model LSTM Standar | Sama-sama menggunakan arsitektur *Deep Learning* untuk memproses data deret waktu (*time-series*). | Digunakan di hampir semua paper komparasi sebagai acuan performa dasar sebelum optimasi. | Bukan SOTA, tetapi mewakili *common practice* saat ini. | Sha (2024) |
-| 2 | Model ARIMA | Memiliki tujuan yang sama yaitu melakukan peramalan (*forecasting*) nilai masa depan berdasarkan data historis. | Merupakan standar emas dalam metode statistika tradisional yang sangat lazim digunakan oleh analis pasar modal. | Bukan, ini adalah *statistical baseline* klasik. | Siami-Namini (2018) |
+| Kriteria | Skor (1-5) | Justifikasi |
+|----------|-----------|-------------|
+| Representative | 5 | Waktu respons adalah indikator utama untuk mengukur kinerja DBMS dalam menangani permintaan aplikasi. |
+| Sensitive | 5 | Pengukuran dalam milidetik mampu menangkap perbedaan performa yang sangat kecil sekalipun di antara kedua database. |
+| Feasible | 5 | Data waktu respons sangat mudah dikumpulkan secara otomatis melalui log sistem selama eksperimen CRUD berlangsung. |
 
-**Apakah pemilihan baseline ini bisa dianggap straw man?** [ ] Ya / [x] Tidak
+**Apakah perlu secondary metric?** [x] Ya / [ ] Tidak
+> Jika ya, apa dan mengapa? **Resource Usage (CPU/RAM).** Karena database yang cepat namun mengonsumsi memori klien yang terlalu besar dapat membebani perangkat mobile pengguna.
 
-> **Justifikasi:** Pemilihan baseline ini bukan *straw man* (perbandingan tidak adil) karena tujuan utama riset ini adalah membuktikan efektivitas algoritma optimasi. Dengan membandingkan GA-LSTM terhadap LSTM standar, kita menunjukkan secara jujur dampak dari penambahan *Genetic Algorithm*. Sedangkan penggunaan ARIMA bertujuan untuk menunjukkan keunggulan pendekatan AI dibandingkan metode statistik konvensional yang masih banyak digunakan di industri.
+**Contoh kasus ceiling effect untuk metrik ini:**
+> Jika jaringan internet yang digunakan sangat lambat (misalnya di bawah 128 kbps), perbedaan kecepatan antara Firebase dan MySQL mungkin tidak akan terlihat karena keduanya sama-sama tertahan oleh batasan kecepatan jaringan (*network bottleneck*).
+
+---
+
+## Latihan 3 — Data Quality Check
+
+Evaluasi 4 dimensi kualitas data berdasarkan eksperimen individu:
+
+| Dimensi | Pertanyaan | Jawaban & Strategi Mitigasi |
+|---------|-----------|------------------|
+| Completeness | *Apakah semua data point terkumpul?* | Risiko kehilangan data log jika sistem crash saat batch 3.000 data. **Mitigasi:** Menggunakan skrip otomatis yang menyimpan hasil setiap iterasi langsung ke file lokal secara berkala. |
+| Consistency | *Apakah ada kontradiksi internal?* | Variasi waktu respons akibat fluktuasi jaringan selama 50 kali pengulangan. **Mitigasi:** Melakukan pengujian pada lingkungan jaringan yang terkontrol dan menggunakan nilai rata-rata (mean) dari 50 iterasi untuk stabilitas data. |
+| Validity | *Apakah benar-benar mengukur yang dimaksud?* | Waktu respons mungkin tercampur dengan waktu pemrosesan UI di Android. **Mitigasi:** Mengukur waktu eksekusi murni pada level kode backend/database listener, bukan dari sisi antarmuka pengguna. |
+| Representativeness | *Apakah sampel mewakili populasi target?* | Beban 3.000 data mungkin terlalu kecil untuk aplikasi skala nasional. **Mitigasi:** Menegaskan dalam limitasi penelitian bahwa hasil ini berlaku untuk penggunaan skala menengah atau aplikasi pemantauan gizi lokal. |
+
 ---
 
 ## Refleksi
 
-> Apa perbedaan antara "belum ada yang meneliti ini" (klaim tanpa bukti) dengan research gap yang valid? Bagaimana cara membuktikan bahwa sebuah gap benar-benar ada?
+> Mengapa memilih metrik setelah melihat data dianggap p-hacking? Apa bedanya dengan eksplorasi data yang sah?
 
 **Jawaban:**
-Klaim "belum ada yang meneliti ini" sering kali bermuara pada topik yang sebenarnya memang tidak penting atau tidak make sense untuk diteliti (misal: "belum ada yang memprediksi harga saham menggunakan suhu udara"). Itu adalah asumsi kosong. Sebaliknya, research gap yang valid didasarkan pada tinjauan literatur yang sistematis (concept-centric). Gap ini menunjukkan adanya kebutuhan (need) yang belum terpenuhi atau limitasi teknis pada metode sebelumnya.
-
-Cara membuktikannya adalah dengan membuat Literature Matrix. Kita menjajarkan state-of-the-art (SOTA) yang ada saat ini, merangkum Results dan Limitations mereka secara terstruktur, dan menunjukkan secara konkret di bagian mana titik lemah (Performance/Method/Context) yang secara konsisten diakui oleh para peneliti terdahulu, lalu kita masuk untuk mengisi lubang tersebut..
+> Memilih metrik setelah melihat data dianggap p-hacking karena peneliti cenderung hanya akan memilih metrik yang menunjukkan hasil "menang" atau "signifikan" bagi metode yang didukungnya. Hal ini merusak objektivitas riset karena hasil yang dilaporkan bukan merupakan hasil uji hipotesis yang jujur, melainkan hasil pencarian paksa atas statistik yang terlihat bagus.
+> 
+> Perbedaannya dengan eksplorasi data yang sah terletak pada pelaporannya. Eksplorasi data bertujuan untuk menemukan pola baru tanpa klaim pembuktian awal. Jika dalam eksplorasi ditemukan metrik baru yang menarik, hal tersebut harus dilaporkan sebagai "temuan tambahan" atau "saran riset mendatang", bukan diklaim sebagai tujuan utama penelitian yang sudah direncanakan dari awal.
