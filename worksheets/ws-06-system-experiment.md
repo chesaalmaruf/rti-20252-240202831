@@ -65,45 +65,43 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 ## Template A.6 — Mapping RQ ke Arsitektur Sistem
 
 ```
-SYSTEM-EXPERIMENT MAPPING
+**SYSTEM-EXPERIMENT MAPPING**
 
-Research Question: ____________________
+**Research Question:** Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
 
-Variable → Component Mapping:
+**Variable → Component Mapping:**
+
 | Variabel | Tipe | Komponen Sistem | Cara Manipulasi/Pengukuran |
 |----------|------|-----------------|---------------------------|
-|          | IV   |                 |                           |
-|          | DV   |                 |                           |
-|          | CV   |                 |                           |
+| **Jenis DBMS** | IV | Modul Koneksi Basis Data (Prisma Client & `.env`) | Mengubah URL string koneksi basis data di dalam file konfigurasi `.env`. |
+| **Latency & Throughput** | DV | Modul *Benchmarking* (NPM Autocannon) | Pengukuran dan pencatatan metrik otomatis ke dalam format JSON/Teks oleh *Autocannon logger*. |
+| **Beban Konkurensi** | CV | Parameter Eksekusi *Load Tester* | Memanipulasi *flag* CLI (`-c 500` dan `-d 30`) pada saat menjalankan *Autocannon*. |
+| **Algoritma Hashing** | CV | *Auth Controller Layer* (Fungsi Login) | Konfigurasi `bcrypt.compare()` yang dikunci statis pada *source code* *controller*. |
 
-4 Prinsip Desain:
-  [ ] Traceability — Setiap komponen bisa ditelusuri ke variabel
-  [ ] Variable Isolation — IV bisa diubah tanpa mengubah CV
-  [ ] Measurement Integration — Pengukuran DV built-in
-  [ ] Reproducibility — Setup bisa direkonstruksi
+**4 Prinsip Desain:**
+* [x] **Traceability** — Setiap komponen bisa ditelusuri ke variabel (Contoh: `autocannon` untuk DV, `.env` untuk IV).
+* [x] **Variable Isolation** — IV bisa diubah tanpa mengubah CV (Mengganti jenis DB hanya memerlukan perubahan string `.env` tanpa menyentuh logika *Auth Controller*).
+* [x] **Measurement Integration** — Pengukuran DV *built-in* melalui *Autocannon*.
+* [x] **Reproducibility** — Setup bisa direkonstruksi dengan script `npm run seed` dan `npm run benchmark`.
 
-Experimental Setup:
-  Input data     : ____________________
-  Parameter      : ____________________
-  Output format  : ____________________
+**Experimental Setup:**
+* **Input data:** *Payload* JSON berisi `{"email": "userX@test.com", "password": "password123"}` (disimulasikan dari 100.000 *dummy records*).
+* **Parameter:** Durasi uji 30 detik (`-d 30`), konkurensi 500 koneksi (`-c 500`), *pipelining* diaktifkan.
+* **Output format:** Log *console* dan *file* laporan JSON yang berisi nilai rata-rata, persentil, dan batas toleransi *latency/throughput*.
 ```
-
 ---
 
 ## Latihan 1 — Variable-to-Component Mapping
 
-Gunakan RQ dan variabel dari WS-05. Petakan ke komponen sistem.
-
-**RQ:** __________________________________________________
+**RQ:** Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
 
 | Variabel | Tipe | Komponen Sistem | Cara Manipulasi / Pengukuran |
 |----------|------|-----------------|---------------------------|
-| *Contoh: Jenis model* | *IV* | *Modul classifier (swap RF ↔ CNN)* | *Ganti config `model_type`* |
-| | DV | | |
-| | CV | | |
+| **Jenis DB** | IV | Konfigurasi Skema Prisma (`schema.prisma`) | Mengganti *provider* dari `postgresql` ke `mongodb`. |
+| **Throughput** | DV | *Metrics Collector* (Autocannon) | Otomatis mengkalkulasi jumlah *request* yang berstatus 200 OK per detik. |
+| **Volume Data** | CV | Skrip *Database Seeder* | Parameter rentang `for loop` diset tetap pada angka 100.000 iterasi. |
 
-**Apakah semua variabel bisa di-map?** [ ] Ya / [ ] Tidak
-> Jika tidak, komponen apa yang perlu ditambahkan? _________
+**Apakah semua variabel bisa di-map?** [x] Ya / [ ] Tidak
 
 ---
 
@@ -113,31 +111,31 @@ Evaluasi desain sistem terhadap 4 prinsip.
 
 | Prinsip | Status | Bukti / Penjelasan |
 |---------|--------|-------------------|
-| Traceability | *Contoh: ✅ — setiap modul punya label variabel* | |
-| Modularity | | |
-| Controllability | | |
-| Measurability | | |
+| **Traceability** | ✅ Terpenuhi | Modul koneksi hanya mengatur IV, modul rute/API hanya memproses bisnis logika, dan modul *tester* hanya mencatat DV. |
+| **Modularity** | ✅ Terpenuhi | Logika pengesahan kata laluan (*bcrypt*) terpisah sepenuhnya dari pemacu pangkalan data (*database driver*). |
+| **Controllability** | ⚠️ Sebagian | Konfigurasi parameter eksternal telah diasingkan ke fail `.env` dan *flags* CLI. Namun, beban dari Sistem Operasi (OS) dan Rangkaian masih sukar dikawal secara mutlak. |
+| **Measurability** | ✅ Terpenuhi | Menggunakan alatan CLI pengujian beban standard industri (*Autocannon*) yang menghasilkan data berstruktur dan kebolehulangan tinggi. |
 
-**Prinsip mana yang paling sulit dipenuhi?** _______________
+**Prinsip mana yang paling sulit dipenuhi?** Controllability (Pengawalan faktor persekitaran).
 **Strategi untuk mengatasinya:**
-> ___________________________________________________
+> Menjalankan persekitaran sistem (API dan *Database*) di dalam *Docker Containers* dan memberikan had sumber daya yang tetap (*resource limits*, seperti CPU dan RAM) bagi memastikan sistem operasi hos tidak menjadi pembolehubah perancu (*confounding variable*).
 
 ---
 
 ## Latihan 3 — Ablation Study Planning
 
-Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
+Dalam kajian prestasi senario log masuk, kita mengandaikan kependaman dipengaruhi oleh 3 faktor (lapisan perisian): jenis pangkalan data, lapisan ORM, dan lapisan kriptografi.
 
-| Kondisi | Komponen A | Komponen B | Komponen C | Hasil yang Diharapkan |
-|---------|-----------|-----------|-----------|----------------------|
-| Full | *Contoh: ✅ CNN* | *Contoh: ✅ Temporal features* | *Contoh: ✅ Z-score norm* | *Baseline penuh* |
-| – A | ❌ (ganti RF) | ✅ | ✅ | |
-| – B | ✅ | ❌ (tanpa temporal) | ✅ | |
-| – C | ✅ | ✅ | ❌ (tanpa normalisasi) | |
+| Kondisi | Komponen A (Lapisan Kriptografi) | Komponen B (Lapisan Akses Data) | Komponen C (Sistem Pangkalan Data) | Hasil yang Diharapkan |
+|---------|--------------------------------|-------------------------------|----------------------------------|----------------------|
+| **Full** | ✅ *Bcrypt Hashing* | ✅ *Prisma ORM* | ✅ *MongoDB (NoSQL)* | *Baseline* prestasi dunia sebenar (Tinggi kependaman kerana proses hashing yang berat). |
+| **– A** | ❌ *Plaintext (Tiada Hashing)* | ✅ *Prisma ORM* | ✅ *MongoDB (NoSQL)* | Menunjukkan kependaman dan had truput sebenar pangkalan data. |
+| **– B** | ✅ *Bcrypt Hashing* | ❌ *Native Driver (Mongoose)* | ✅ *MongoDB (NoSQL)* | Mengukur penalti prestasi (*overhead*) akibat penggunaan *Prisma ORM*. |
+| **– C** | ✅ *Bcrypt Hashing* | ✅ *Prisma ORM* | ❌ *PostgreSQL (SQL)* | Menjawab persoalan kajian utama sama ada *PostgreSQL* lebih efisien pada tahap seni bina ini. |
 
-**Komponen mana yang diprediksi paling berkontribusi?** _____
+**Komponen mana yang diprediksi paling berkontribusi?** Komponen A (Lapisan Kriptografi / *Bcrypt*).
 **Mengapa?**
-> ___________________________________________________
+> Reka bentuk *Bcrypt* sememangnya sengaja diperlahankan untuk mengelakkan serangan *brute-force*. Oleh itu, ia akan memakan sumber CPU yang jauh lebih besar berbanding masa yang diambil oleh pangkalan data (Komponen C) untuk mencari maklumat pengguna.
 
 ---
 
@@ -146,5 +144,7 @@ Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 > Apa risiko jika sistem dibangun seperti produk (monolitik, fitur lengkap) lalu baru dilakukan eksperimen? Mengapa arsitektur modular penting untuk riset?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Risiko membina sistem risalah (produk penuh seperti kerangka aplikasi web yang sarat dengan pembalakan, pengecaman sesi, dan UI) ialah pengenalan pembolehubah perancu (*confounding variables*). Sebagai contoh, jika *throughput* perlahan, sukar untuk membezakan sama ada ia berpunca daripada kependaman pangkalan data, kependaman pelayan rangkaian, atau kependaman enjin pemaparan templat.
+>
+> Seni bina modular adalah kritikal untuk penyelidikan bagi memastikan **Pengasingan Pembolehubah (*Variable Isolation*)**. Penyelidik dapat memastikan hanya komponen yang diuji (contohnya, enjin *MongoDB* berbanding *Postgres*) yang diubah, manakala lapisan sistem lain kekal tidak berubah secara berstruktur. Pendekatan ini menjamin perbandingan *apple-to-apple*.
+
