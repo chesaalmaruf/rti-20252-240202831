@@ -59,95 +59,103 @@ Membandingkan deep learning 2024 dengan decision tree sederhana tanpa justifikas
 ## Template A.3 — Literature Mapping & Gap Identification
 
 ```
-RQ-CONTRIBUTION-HYPOTHESIS
+**LITERATURE MAPPING**
 
-Gap Statement  : Meskipun penelitian sebelumnya telah membandingkan performa database, terdapat kesenjangan dalam pengujian statistik yang ketat untuk data yang tidak terdistribusi normal pada aplikasi kesehatan mobile. Mayoritas riset hanya berfokus pada efisiensi tanpa membuktikan secara signifikan apakah perbedaan waktu respons tersebut benar-benar nyata (significant) pada operasi CRUD dasar untuk skema data nutrisi balita.
+**Topik** : Analisis Perbandingan Performa Latency dan Throughput PostgreSQL vs MongoDB pada Skema Autentikasi Pengguna.
+**Database** : Google Scholar, Sinta (Jurnal lokal terakreditasi).
+**Query** : `("MySQL" OR "PostgreSQL") AND ("MongoDB" OR "NoSQL") AND ("performance" OR "response time")`
+**Tahun** : 2020 - 2024
+**Hasil awal** : 15 paper → Screening → 5 paper final
 
-Research Question:
-  Tipe         : [x] Comparison  [ ] Improvement  [ ] Exploratory
-  Formulasi    : Apakah terdapat perbedaan waktu respons yang signifikan secara statistik antara Firebase Realtime Database dan MySQL Database saat melakukan operasi CRUD (Create, Read, Update, Delete) pada aplikasi mobile "Toddlers Daily Nutritional Needs"?
-  Variabel IV  : Jenis Database Management System (Firebase Realtime Database vs MySQL Database).
-  Variabel DV  : Performa waktu respons (Response Time).
-  Metrik       : Milidetik (ms).
-  Dataset      : 50 kali iterasi eksperimen per batch operasi pada rentang 1 hingga 3.000 rekaman data nutrisi.
-  Baseline     : Performa MySQL Database sebagai standar RDBMS yang umum digunakan.
+**Literature Matrix (concept-centric):**
 
-Quality Check RQ:
-  [x] Variabel spesifik
-  [x] Metrik jelas
-  [x] Baseline ada
-  [x] Konteks disebutkan
-  [x] Memerlukan eksperimen (bukan hanya survei literatur)
+| Study | Tahun | Method | Data | Result | Limitation |
+|-------|-------|--------|------|--------|------------|
+| Tavares et al. | 2020 | DML Benchmark (Insert, Update, Delete, Select) via PHP | Dataset SELMA (50 - 100.000 record) | MongoDB lebih unggul di hampir semua DML; MySQL lebih cepat 1,95s khusus untuk `SELECT`. | Hanya menguji DML umum, tidak spesifik pada *high-concurrency* seperti proses autentikasi. |
+| Budiman et al. | 2021 | Query benchmarking di Windows & Ubuntu (MySQL Workbench vs Robo 3T) | Twitter Sentiment (hingga 1.000.000 record) | MongoDB secara signifikan lebih cepat dari MySQL untuk data > 50.000 baris; Ubuntu memberikan performa server lebih baik. | Tidak melibatkan *backend overhead* seperti ORM, murni via GUI *client*. |
+| Pujas et al. | 2024 | Eksperimen Read/Write menggunakan Prisma ORM | Dummy E-commerce (1000-2000 data) | MongoDB lebih cepat pada operasi Create dan Read; MongoDB menggunakan memori lebih kecil (388KB vs 610KB). | Skala dataset terlalu kecil untuk menguji batas *throughput* maksimal sistem. |
+| Fadli et al. | 2020 | Analisis waktu eksekusi SQL vs Redis (NoSQL) | Data akademik | Redis 79,15% lebih cepat daripada MySQL. | Menggunakan Redis (In-memory) yang arsitekturnya sangat berbeda dari document-based seperti MongoDB. |
+| Khan et al. | 2023 | Komputasi waktu load, response, retrieval (SQL vs NoSQL) | Dataset aplikasi | MySQL menunjukkan performa loading dan retrieval yang jauh lebih signifikan dibanding MongoDB. | Hasil saling bertolak belakang dengan studi lain; diduga karena kondisi *environment* server yang tidak setara. |
 
-Contribution Statement:
-  Apa yang baru diketahui : Bukti empiris melalui uji Wilcoxon Signed-Rank bahwa Firebase memiliki performa waktu respons yang lebih unggul dibandingkan MySQL untuk aplikasi mobile dengan skema data sederhana.
-  Jenis kontribusi        : [x] Comparison  [ ] Improvement  [ ] Novel approach
-  Gap yang diisi          : Mengisi celah perbandingan performa antara database NoSQL cloud-hosted dan SQL tradisional pada platform Android 9.0 untuk data kesehatan masyarakat.
+**Pola yang ditemukan:**
+* **Metode dominan:** Eksperimen kuantitatif dengan variasi jumlah baris data (dari ratusan hingga jutaan) yang diukur dalam satuan detik/milidetik.
+* **Dataset umum:** Dataset teks sekunder (E-commerce dummy, Twitter sentiment, data layanan publik).
+* **Limitasi berulang:** Terdapat anomali (hasil bertolak belakang) pada kueri `SELECT`/`READ`, yang sering kali dipengaruhi oleh ada atau tidaknya penggunaan *Object Relational Mapping* (ORM) atau *environment* sistem operasi yang tidak diisolasi dengan baik.
 
-Hypothesis Pair:
-  H₀ : Performa waktu respons Firebase Realtime Database dalam melakukan operasi CRUD lebih buruk daripada atau sama dengan MySQL Database.
-  H₁ : Performa waktu respons Firebase Realtime Database dalam melakukan operasi CRUD lebih baik daripada MySQL Database.
-  Threshold              : p-value < 0.05
-  Justifikasi threshold  : Nilai alpha 0.05 adalah standar emas dalam penelitian komputasi untuk menolak hipotesis nol dengan tingkat kepercayaan 95%.
+---
+
+**GAP IDENTIFICATION**
+
+**Gap 1: [Context Gap]**
+* **Deskripsi** : Mayoritas studi menguji kueri dasar (CRUD umum) tanpa mensimulasikan kasus spesifik dengan beban komputasi ganda seperti autentikasi (*Login*), di mana database harus mencari data unik (email) sekaligus dicocokkan dengan *hashing library* (misal: bcrypt).
+* **Bukti** : Studi dari Tavares (2020) dan Budiman (2021) hanya menggunakan filter kata sederhana (`LIKE`) tanpa menguji spesifik skenario *login concurrency*.
+* **Signifikansi** : Memberikan data performa yang lebih akurat dan dapat langsung diaplikasikan oleh *developer* yang membangun sistem autentikasi di Node.js.
+
+**Gap 2: [Method Gap]**
+* **Deskripsi** : Ketidakkonsistenan hasil pengujian `SELECT` (beberapa menyebut MySQL lebih cepat, yang lain MongoDB) mengindikasikan adanya *overhead* yang belum terukur dengan baik dari penggunaan ORM (misal: Prisma).
+* **Bukti** : Pujas et al. (2024) menemukan MongoDB lebih cepat saat membaca data menggunakan Prisma ORM, yang bertolak belakang dengan temuan Tavares (2020) yang menggunakan *raw query* PHP.
+* **Signifikansi** : Memastikan apakah penggunaan ORM modern di Node.js merugikan performa database relasional dibandingkan NoSQL.
+
+**Baseline Selection:**
+| Baseline | Relevansi | Representatif | Source |
+|----------|-----------|---------------|--------|
+| PostgreSQL + Raw Query | Pembanding performa asli database relasional tanpa *overhead* *driver*. | Praktik tradisional (*common practice*) yang paling diandalkan kestabilannya. | Tavares et al. (2020) |
+| MongoDB + Prisma ORM | Menyimulasikan tumpukan teknologi modern untuk NoSQL di Node.js. | Mewakili tren pengembangan sistem saat ini. | Pujas et al. (2024) |
 ```
 
 ---
-# WS-05: Variabel & Metrik
 
 ---
 
-## Latihan 1 — Operationalization Chain
+## Latihan 1 — Concept-Centric Literature Table
 
-**RQ:** Apakah Firebase Realtime Database memberikan waktu respons yang secara signifikan lebih cepat dibandingkan MySQL Database pada operasi CRUD di aplikasi "Toddlers Daily Nutritional Needs"?
+**Topik riset:** Analisis Performa Autentikasi: PostgreSQL vs MongoDB di Lingkungan Node.js.
+**Query pencarian:** `("PostgreSQL" OR "MySQL") AND "MongoDB" AND "performance" AND "Node.js"`
+**Database:** Google Scholar & Portal Garuda.
 
-| Variabel | Tipe | Konsep Abstrak | Metrik Konkret | Skala (NOIR) | Satuan |
-|----------|------|---------------|----------------|-------------|--------|
-| Jenis DBMS | IV | Arsitektur penyimpanan data | Firebase vs MySQL | Nominal | — |
-| Kecepatan Sistem | DV | Efisiensi waktu akses | Response Time (Waktu Respons) | Ratio | Milidetik (ms) |
-| Beban Data | CV | Volume pemrosesan | Jumlah rekaman data (1 - 3.000) | Ratio | Rekaman (Records) |
-| Operasi Basis Data | CV | Standar interaksi data | Fungsi CRUD (Create, Read, Update, Delete) | Nominal | — |
+| # | Study | Tahun | Method | Dataset | Result | Limitasi |
+|---|-------|-------|--------|---------|--------|----------|
+| 1 | Tavares et al. | 2020 | DML Benchmark | SELMA (100k data) | MongoDB unggul DML; MySQL menang di SELECT. | Tidak ada uji concurrency. |
+| 2 | Budiman et al. | 2021 | OS Benchmark | Twitter (1M data) | MongoDB konsisten di data besar. | Bukan via API Backend. |
+| 3 | Pujas et al. | 2024 | Prisma ORM Test | E-commerce Dummy | MongoDB hemat storage (388KB). | Data terlalu kecil (1k). |
+| 4 | Khan et al. | 2023 | Response Metric | Data App | SQL unggul pada retrieval. | Anomali konfigurasi hardware. |
+| 5 | Fadli et al. | 2020 | Big Data Analysis | Data Akademik | Redis lebih cepat 79%. | Beda jenis (In-memory). |
 
-**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [x] Tidak
-> Rantai sudah selaras karena "Kecepatan Sistem" secara teknis diukur melalui durasi waktu respons dari saat permintaan dikirim hingga diterima kembali oleh server.
-
----
-
-## Latihan 2 — Evaluasi Metrik
-
-Evaluasi metrik DV (Response Time) yang dipilih di Latihan 1 menggunakan 3 kriteria.
-
-| Kriteria | Skor (1-5) | Justifikasi |
-|----------|-----------|-------------|
-| Representative | 5 | Waktu respons adalah indikator utama untuk mengukur kinerja DBMS dalam menangani permintaan aplikasi. |
-| Sensitive | 5 | Pengukuran dalam milidetik mampu menangkap perbedaan performa yang sangat kecil sekalipun di antara kedua database. |
-| Feasible | 5 | Data waktu respons sangat mudah dikumpulkan secara otomatis melalui log sistem selama eksperimen CRUD berlangsung. |
-
-**Apakah perlu secondary metric?** [x] Ya / [ ] Tidak
-> Jika ya, apa dan mengapa? **Resource Usage (CPU/RAM).** Karena database yang cepat namun mengonsumsi memori klien yang terlalu besar dapat membebani perangkat mobile pengguna.
-
-**Contoh kasus ceiling effect untuk metrik ini:**
-> Jika jaringan internet yang digunakan sangat lambat (misalnya di bawah 128 kbps), perbedaan kecepatan antara Firebase dan MySQL mungkin tidak akan terlihat karena keduanya sama-sama tertahan oleh batasan kecepatan jaringan (*network bottleneck*).
+**Pola yang terlihat — Metode dominan:** Benchmarking 1-on-1 dengan metrik milidetik.
+**Limitasi yang berulang:** Pengabaian terhadap *logic overhead* aplikasi (bcrypt/JWT) dan pengujian pada throughput tinggi.
 
 ---
 
-## Latihan 3 — Data Quality Check
+## Latihan 2 — Gap Identification
 
-Evaluasi 4 dimensi kualitas data berdasarkan eksperimen individu:
+| Jenis Gap | Ditemukan? | Gap Statement |
+|-----------|-----------|---------------|
+| Performance Gap | [ ] Ya / [X] Tidak | |
+| Method Gap | [X] Ya / [ ] Tidak | Belum ada evaluasi dampak penggunaan ORM (Prisma) terhadap latency autentikasi di PostgreSQL vs MongoDB. |
+| Data Gap | [ ] Ya / [X] Tidak | |
+| Context Gap | [X] Ya / [ ] Tidak | Belum ada perbandingan database khusus pada beban kerja high-concurrency login di Node.js. |
 
-| Dimensi | Pertanyaan | Jawaban & Strategi Mitigasi |
-|---------|-----------|------------------|
-| Completeness | *Apakah semua data point terkumpul?* | Risiko kehilangan data log jika sistem crash saat batch 3.000 data. **Mitigasi:** Menggunakan skrip otomatis yang menyimpan hasil setiap iterasi langsung ke file lokal secara berkala. |
-| Consistency | *Apakah ada kontradiksi internal?* | Variasi waktu respons akibat fluktuasi jaringan selama 50 kali pengulangan. **Mitigasi:** Melakukan pengujian pada lingkungan jaringan yang terkontrol dan menggunakan nilai rata-rata (mean) dari 50 iterasi untuk stabilitas data. |
-| Validity | *Apakah benar-benar mengukur yang dimaksud?* | Waktu respons mungkin tercampur dengan waktu pemrosesan UI di Android. **Mitigasi:** Mengukur waktu eksekusi murni pada level kode backend/database listener, bukan dari sisi antarmuka pengguna. |
-| Representativeness | *Apakah sampel mewakili populasi target?* | Beban 3.000 data mungkin terlalu kecil untuk aplikasi skala nasional. **Mitigasi:** Menegaskan dalam limitasi penelitian bahwa hasil ini berlaku untuk penggunaan skala menengah atau aplikasi pemantauan gizi lokal. |
+**Gap utama yang dipilih:** Context Gap (Skenario Autentikasi High-Concurrency).
+**Mengapa gap ini penting?**
+> Karena login adalah gerbang utama aplikasi. Mengetahui batas maksimal (throughput) database dalam menangani ratusan user login per detik sangat krusial untuk kestabilan sistem di dunia nyata.
 
 ---
+
+## Latihan 3 — Baseline Selection
+
+| # | Baseline | Mengapa Relevan | Mengapa Representatif | Apakah SOTA? | Sumber |
+|---|----------|----------------|----------------------|-------------|--------|
+| 1 | PostgreSQL Raw Query | Pembanding performa asli database relasional. | Common practice di industri. | Bukan, tapi standar emas. | Tavares et al., 2020 |
+| 2 | MongoDB Prisma ORM | Simulasi tumpukan teknologi modern. | Tren pengembangan aplikasi web saat ini. | Ya, untuk ekosistem Node.js. | Pujas et al., 2024 |
+
+---
+
 
 ## Refleksi
 
-> Mengapa memilih metrik setelah melihat data dianggap p-hacking? Apa bedanya dengan eksplorasi data yang sah?
+**Apakah pemilihan baseline ini bisa dianggap straw man?** [ ] Ya / [X] Tidak
+> **Justifikasi:** Perbandingan dilakukan secara adil dengan alat yang lazim digunakan (Prisma) dan standar industri (PostgreSQL), tanpa sengaja melemahkan konfigurasi salah satunya.
+
 
 **Jawaban:**
-> Memilih metrik setelah melihat data dianggap p-hacking karena peneliti cenderung hanya akan memilih metrik yang menunjukkan hasil "menang" atau "signifikan" bagi metode yang didukungnya. Hal ini merusak objektivitas riset karena hasil yang dilaporkan bukan merupakan hasil uji hipotesis yang jujur, melainkan hasil pencarian paksa atas statistik yang terlihat bagus.
-> 
-> Perbedaannya dengan eksplorasi data yang sah terletak pada pelaporannya. Eksplorasi data bertujuan untuk menemukan pola baru tanpa klaim pembuktian awal. Jika dalam eksplorasi ditemukan metrik baru yang menarik, hal tersebut harus dilaporkan sebagai "temuan tambahan" atau "saran riset mendatang", bukan diklaim sebagai tujuan utama penelitian yang sudah direncanakan dari awal.
+> Klaim "belum ada yang meneliti ini" tanpa bukti hanyalah asumsi malas, sedangkan *research gap* yang valid lahir dari pemetaan literatur sistematis yang menunjukkan pola keterbatasan (seperti ketiadaan uji fungsional login pada paper-paper sebelumnya). Cara membuktikannya adalah dengan menyusun matriks literatur dan menunjukkan secara eksplisit variabel atau konteks mana yang konsisten terabaikan oleh peneliti terdahulu.
