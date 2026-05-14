@@ -61,81 +61,73 @@ Metrik harus ditentukan **sebelum** eksperimen. Memilih metrik setelah melihat d
 
 ---
 
+
 ## Template A.5 — Definisi Variabel, Metrik & Justifikasi
-
 ```
-VARIABLE & METRIC DEFINITION
+**VARIABLE & METRIC DEFINITION**
 
-Research Question: Apakah penggunaan aplikasi pencatatan keuangan agribisnis berbasis web (Catat Yuk Tan!) secara signifikan memangkas waktu penyelesaian tugas (Task Completion Time) dan mencapai skor System Usability Scale (SUS) yang lebih tinggi dibandingkan dengan metode pencatatan buku kas manual pada pengujian yang melibatkan 30 responden pelaku agribisnis?
+**Research Question:** Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
 
 | Variabel | Tipe | Konsep | Metrik | Skala | Satuan | Cara Mengukur | Justifikasi |
 |----------|------|--------|--------|-------|--------|---------------|-------------|
-| Metode Pencatatan | IV | Pendekatan antarmuka pengguna | Aplikasi Web vs Buku Kas Manual | Nominal | — | Menugaskan responden untuk memproses data menggunakan kedua metode tersebut secara bergiliran. | Merupakan perlakuan (treatment) utama penentu kelompok komparasi dalam desain eksperimen. |
-| Efisiensi Operasional | DV | Kecepatan penyelesaian kerja | Task Completion Time (Durasi entri data) | Ratio | Detik | Mengekstrak durasi waktu dari rekaman layar/video (dari detik pertama input hingga data terakhir tersimpan). | Waktu adalah indikator paling objektif, kuantitatif, dan bebas bias untuk membuktikan klaim "lebih cepat". |
-| Usability | DV | Tingkat penerimaan/kepuasan pengguna | Skor System Usability Scale (SUS) | Interval | 0-100 | Mengkalkulasi dan mengonversi respons responden dari 10 butir pertanyaan kuesioner SUS berskala Likert (1-5). | SUS adalah instrumen standar yang sudah divalidasi secara global untuk mengukur kemudahan penggunaan sistem secara reliabel. |
-| Skenario Transaksi | CV | Keseragaman beban kerja | Jumlah dan detail item transaksi harian | Ratio | Baris/Item | Menyediakan satu lembar panduan cetak berisi daftar transaksi fiktif yang identik untuk seluruh responden di kedua sesi pengujian. | Variabel ini wajib dikontrol agar perbedaan waktu (DV) murni disebabkan oleh perbedaan metode (IV), bukan karena jumlah input yang berbeda. |
+| **Jenis DBMS** | IV | Teknologi Basis Data | Kategori (Postgres vs MongoDB) | Nominal | - | Penentuan jenis DB pada *database connection string* di Node.js. | Standar untuk riset komparasi teknologi DBMS. |
+| **Latency** | DV | Kecepatan Respon | *Average response time* per *request* | Ratio | ms | Menggunakan metrik `average` dari hasil *load test* Autocannon. | Mengukur pengalaman pengguna langsung saat proses login. |
+| **Throughput** | DV | Kapasitas Sistem | *Total requests processed per second* | Ratio | req/s | Menggunakan metrik `Requests/sec` (RPS) dari output Autocannon. | Mengukur kemampuan skalabilitas basis data saat beban tinggi. |
+| **Beban Konkurensi** | CV | Intensitas Trafik | Jumlah koneksi simultan (500) | Ratio | users | Parameter `-c 500` pada perintah eksekusi Autocannon. | Mencegah bias akibat fluktuasi jumlah trafik selama pengujian. |
+| **Volume Data** | CV | Skala Data | Jumlah record user (100.000) | Ratio | records | Query `COUNT` pada tabel/koleksi user sebelum pengujian dimulai. | Memastikan perbandingan dilakukan pada beban data yang adil (*apple-to-apple*). |
 
-Alignment Check:
-  RQ → Concept → Variable → Metric → Data → Result
-  [x] Setiap langkah terdokumentasi
-  [x] Tidak ada "lompatan logis"
-  [x] Metrik mengukur apa yang dimaksud (construct validity)
+**Alignment Check:**
+* [x] **Setiap langkah terdokumentasi:** Rantai dari RQ ke instrumen ukur sudah terurai jelas.
+* [x] **Tidak ada "lompatan logis":** Latency dan Throughput adalah manifestasi teknis yang tepat untuk konsep "performa".
+* [x] **Metrik mengukur apa yang dimaksud (construct validity):** RPS secara akurat mengukur kapasitas kerja sistem per satuan waktu.
 ```
-
 ---
 
 ## Latihan 1 — Operationalization Chain
 
-Gunakan RQ dari WS-04. Definisikan variabel dan metriknya.
+**RQ:** Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
 
-**RQ:** Apakah penggunaan aplikasi pencatatan keuangan agribisnis berbasis web (Catat Yuk Tan!) secara signifikan memangkas waktu penyelesaian tugas (Task Completion Time) dan mencapai skor System Usability Scale (SUS) yang lebih tinggi dibandingkan dengan metode pencatatan manual pada responden pelaku agribisnis?
 | Variabel | Tipe | Konsep Abstrak | Metrik Konkret | Skala (NOIR) | Satuan |
 |----------|------|---------------|----------------|-------------|--------|
-|Metode Pencatatan| IV |Pendekatan antarmuka pengguna |Aplikasi Web vs Buku Kas Manual  | Nominal  | - |
-|Efisiensi Operasional | DV | kecepatan penyelasainan kerja | task completion time | ratio | detik |
-|Usability | DV |  tingkat kepuasan pengguna| Skor System Usability Scale (SUS) | interval | 0-100 |
-|kenario transaksi| CV |keseragaman beban kerja | jumlah dan jenis data yang harus diinput  |ratio | item (baris data)|
+| **Jenis DBMS** | IV | Teknologi penyimpanan | PostgreSQL vs MongoDB | Nominal | - |
+| **Throughput** | DV | Efisiensi Kapasitas | *Requests Per Second* (RPS) | Ratio | req/s |
+| **Algoritma Hashing**| CV | Beban Komputasi | Bcrypt (10 rounds) | Nominal | - |
 
-**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [x] Tidak
-> Jika ya, di mana? ____________________________________
+**Apakah ada lompatan logis dalam rantai?** [x] Tidak
+> **Justifikasi:** RPS adalah metrik standar dalam rekayasa perangkat lunak untuk mengukur efisiensi pemrosesan, sehingga valid untuk operasionalisasi konsep "kapasitas".
 
 ---
 
 ## Latihan 2 — Evaluasi Metrik
 
-Evaluasi metrik DV yang dipilih di Latihan 1 menggunakan 3 kriteria.
+Evaluasi metrik **Latency (Average Response Time)**.
 
 | Kriteria | Skor (1-5) | Justifikasi |
 |----------|-----------|-------------|
-| Representative | 5 | Waktu (detik) adalah indikator paling objektif dan universal untuk "efisiensi". SUS adalah standar akademis dan industri yang telah teruji untuk mengukur usability. |
-| Sensitive | 4 | Stopwatch sangat peka menangkap perbedaan waktu hingga milidetik. SUS cukup peka mengukur persepsi, walau masih ada sedikit bias subjektivitas dari mood responden. |
-| Feasible | 5 | Sangat realistis. Pengukuran waktu hanya butuh stopwatch di lapangan, dan SUS dapat dikumpulkan langsung melalui kuesioner tertulis/digital (Google Forms). |
+| **Representative** | 5 | Latency adalah indikator utama kenyamanan pengguna dalam sistem autentikasi. |
+| **Sensitive** | 5 | Skala milidetik (ms) sangat peka dalam mendeteksi perbedaan performa sekecil apa pun antar DBMS. |
+| **Feasible** | 5 | Data mudah didapatkan secara otomatis melalui library benchmarking Node.js (Autocannon). |
 
-**Apakah perlu secondary metric?** [x] Ya / [ ] Tidak
-> Jika ya, apa dan mengapa? Error Rate (Tingkat Kesalahan Input). Sangat penting karena "cepat" belum tentu "akurat". Jika aplikasi mencatat waktu sangat cepat tetapi pengguna banyak salah ketik angka/nominal dibanding metode manual, maka efisiensi sebenarnya menurun (harus kerja dua kali).
+**Apakah perlu secondary metric?** [x] Ya
+> **Apa dan mengapa?** **Resource Usage (CPU/RAM Usage)**. Karena basis data yang cepat namun sangat boros sumber daya mungkin tidak efisien secara biaya infrastruktur dalam jangka panjang.
 
 **Contoh kasus ceiling effect untuk metrik ini:**
-> Skenario data transaksi yang diujikan terlalu sedikit atau terlalu mudah (misal: hanya mencatat 1 barang). Akibatnya, baik menggunakan aplikasi maupun buku manual, waktunya hampir sama cepatnya karena tertahan oleh batas atas kecepatan fisik manusia saat mengetik/menulis.
+> Jika *bandwidth* jaringan server mencapai batas maksimal (100%), maka latency PostgreSQL dan MongoDB akan terlihat sama-sama buruk, sehingga perbedaan performa asli dari database tidak lagi teramati.
 
 ---
 
 ## Latihan 3 — Data Quality Check
 
-Bayangkan data yang akan dikumpulkan dari eksperimen. Evaluasi 4 dimensi kualitas data.
-
 | Dimensi | Pertanyaan | Jawaban | Strategi Mitigasi |
 |---------|-----------|---------|------------------|
-| Completeness | *Apakah semua data point terkumpul?* | terkumpul?	Rentan ada data waktu yang terlewat karena peneliti harus memandu responden sekaligus mengoperasikan alat ukur | Gunakan bantuan teknologi seperti aplikasi perekam layar (screen recording) pada perangkat yang digunakan responden, atau pasang kamera smartphone di tripod untuk merekam sesi pengujian. Dengan video playback, Bos bisa mengekstrak data Task Completion Time nanti dengan sangat presisi tanpa khawatir ada rekaman waktu yang hilang atau terlewat di lapangan. |
-| Consistency | *Apakah ada kontradiksi internal?* |Responden mungkin mengisi SUS secara asal (straight-lining, misal nilai 5 semua padahal di SUS ada pertanyaan bernada negatif) | Melakukan data cleaning sebelum analisis untuk membuang respons yang terindikasi straight-lining atau kontradiktif.|
-| Validity | *Apakah benar-benar mengukur yang dimaksud?* | Risiko perhitungan waktu yang tidak standar. | Membuat SOP (Standar Operasional Prosedur) pengukuran waktu yang kaku—kapan stopwatch harus mulai (saat jari menyentuh keyboard/pena) dan kapan berhenti (saat menekan tombol simpan/menutup buku). |
-| Representativeness | *Apakah sampel mewakili populasi target?* |Bisa bias jika responden yang diuji ternyata adalah mahasisw | Menerapkan kriteria inklusi (misal: pengalaman bertani minimal 2 tahun, terbiasa mencatat hasil panen) saat screening responden. |
+| **Completeness** | Apakah semua data point terkumpul? | Ya, setiap *request* yang berhasil atau gagal akan tercatat di log. | Menangani *timeout* agar tidak dianggap sebagai respon yang sangat cepat. |
+| **Consistency** | Apakah ada kontradiksi internal? | Mungkin ada perbedaan antara *cold start* dan *warm start*. | Melakukan fase *warm-up* selama 10 detik sebelum pencatatan data dimulai. |
+| **Validity** | Apakah benar-benar mengukur yang dimaksud? | Ya, timer mengukur durasi penuh dari request hingga response. | Mengisolasi server agar tidak ada proses latar belakang yang mengganggu CPU. |
+| **Representativeness** | Apakah sampel mewakili populasi target? | Ya, 100k data mewakili aplikasi skala menengah yang umum. | Menggunakan library `faker.js` untuk membuat kredensial user yang variatif. |
 
 ---
 
 ## Refleksi
 
-> Mengapa memilih metrik setelah melihat data dianggap p-hacking? Apa bedanya dengan eksplorasi data yang sah?
-
 **Jawaban:**
->Memilih metrik setelah melihat data dianggap sebagai manipulasi (p-hacking) karena peneliti pada dasarnya "mengganti letak papan target setelah anak panah ditembakkan." Peneliti hanya menyeleksi metrik yang memberikan hasil "signifikan secara statistik" untuk membuat sistemnya terlihat bagus, bukan untuk menguji hipotesis secara jujur.
-> Bedanya dengan eksplorasi data yang sah: Eksplorasi data sah asalkan dilaporkan secara jujur sebagai temuan tambahan (post-hoc / exploratory finding), bukan diklaim sebagai tujuan awal (confirmatory) atau metrik utama yang sudah direncanakan sejak sebelum eksperimen dimulai.
+> Memilih metrik setelah melihat data dianggap **p-hacking** karena peneliti cenderung memilih metrik yang hanya mendukung hipotesis mereka dan mengabaikan yang tidak signifikan, sehingga objektivitas riset hilang. Perbedaannya dengan **eksplorasi data yang sah** adalah eksplorasi bertujuan untuk menemukan hipotesis baru untuk penelitian selanjutnya, bukan untuk membuktikan hipotesis yang sudah ada dengan cara memanipulasi metrik yang dilaporkan.
