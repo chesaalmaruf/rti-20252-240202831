@@ -67,16 +67,16 @@ Jika rantai ini tidak lengkap, RQ belum mature. Bi-directional: RQ yang tidak bi
 ```
 RQ-CONTRIBUTION-HYPOTHESIS
 
-Gap Statement  : Mayoritas pelaku agribisnis memiliki keterbatasan literasi digital sehingga sering kali kesulitan mengadopsi teknologi atau aplikasi yang antarmukanya terlalu kompleks[cite: 2]. Di sisi lain, pembukuan manual sangat tidak efisien. Belum ada evaluasi komparatif yang mengukur efisiensi waktu dan tingkat usability dari antarmuka pencatatan keuangan web minimalis (terintegrasi langsung ke cloud spreadsheet) dibandingkan dengan metode pencatatan manual.
+Gap Statement  : Meskipun layanan *Backend-as-a-Service* (BaaS) seperti Firebase terbukti dapat menyederhanakan proses pengembangan aplikasi karena pengembang tidak perlu membuat kode di sisi server [cite: 1], terdapat kekhawatiran mengenai *response time* ketika sistem harus melakukan proses autentikasi yang kompleks melalui infrastruktur *cloud* dibandingkan dengan database lokal. Penelitian sebelumnya telah membandingkan performa CRUD antara Firebase Realtime Database dan MySQL, namun belum secara spesifik mengevaluasi *trade-off* antara efisiensi waktu respon login dan tingkat keamanan fitur pada sistem *Admin Panel* menggunakan PostgreSQL manual (BCrypt) dibandingkan dengan Firebase Authentication.
 
 Research Question:
   Tipe         : [x] Comparison  [ ] Improvement  [ ] Exploratory
-  Formulasi    : Apakah penggunaan aplikasi pencatatan keuangan agribisnis berbasis web, secara signifikan memangkas waktu entri data dan mencapai skor System Usability Scale (SUS) yang lebih tinggi dibandingkan dengan metode pencatatan manual?
-  Variabel IV  : Metode pencatatan transaksi (Aplikasi Web vs Buku Kas Manual)
-  Variabel DV  : Efisiensi operasional dan tingkat penerimaan pengguna (usability)
-  Metrik       : Waktu penyelesaian tugas / Task Completion Time (dalam detik) dan skor SUS
-  Dataset      : 30 responden pelaku/staf agribisnis yang menjalankan skenario entri transaksi harian yang seragam
-  Baseline     : Waktu rata-rata entri data manual dan standar rata-rata global skor SUS, yaitu 68[cite: 2]
+  menghasilkan *response time* login yang lebih cepat secara signifikan dan memberikan skor fitur keamanan yang lebih tinggi dibandingkan dengan sistem autentikasi manual berbasis PostgreSQL pada aplikasi *Admin Panel*?
+  - **Variabel IV** : Metode Autentikasi (PostgreSQL Manual + BCrypt vs. Firebase Authentication SDK)
+  - **Variabel DV** : *Response Time* (Latensi) dan Skor Fitur Keamanan
+  - **Metrik** : Milidetik (ms) untuk waktu respon dan Checklist standar keamanan OWASP untuk skor keamanan
+  - **Dataset** : 50 iterasi percobaan login untuk setiap metode guna menjamin stabilitas data [cite: 1]
+  - **Baseline** : Performa sistem autentikasi database relasional (RDBMS) yang dikelola secara internal (PostgreSQL)
 
 Quality Check RQ:
   [x] Variabel spesifik
@@ -86,15 +86,15 @@ Quality Check RQ:
   [x] Memerlukan eksperimen (bukan hanya survei literatur)
 
 Contribution Statement:
-  Apa yang baru diketahui : Kuantifikasi empiris mengenai efisiensi waktu dan penerimaan pengguna terhadap arsitektur aplikasi pencatatan keuangan berbobot ringan (web-to-spreadsheet) di sektor agribisnis.
+  Apa yang baru diketahui : Perbandingan empiris mengenai efisiensi waktu respon autentikasi antara sistem yang dibangun manual dengan sistem *cloud-managed*, serta pemetaan fitur keamanan yang didapatkan dari masing-masing metode.
   Jenis kontribusi        : [ ] Improvement  [x] Comparison  [ ] Novel approach
-  Gap yang diisi          : Mengatasi masalah kompleksitas sistem pertanian digital dengan menyediakan bukti bahwa solusi antarmuka yang sederhana dapat meningkatkan kepraktisan dan usability[cite: 2].
+  Gap yang diisi          :Memberikan data valid bagi pengembang dalam memilih arsitektur autentikasi yang tepat dengan mempertimbangkan faktor performa dan keamanan secara bersamaan.
 
 Hypothesis Pair:
-  H₀ : Tidak ada perbedaan signifikan pada waktu entri data antara aplikasi dan manual, serta skor SUS aplikasi berada di bawah atau sama dengan nilai rata-rata global 68[cite: 2].
-  H₁ : Aplikasi memangkas waktu entri data secara signifikan dibandingkan metode manual, dan mendapatkan skor SUS di atas 68 yang menunjukkan tingkat usability yang tinggi[cite: 2].
+  H₀ : TFirebase Realtime Database response time performance doing login operation is worse than or equal to PostgreSQL Database manual.
+  H₁ : Firebase Realtime Database response time performance doing login operation is better than PostgreSQL Database manual.
   Threshold              : p-value < 0.05 (untuk uji waktu) dan Skor SUS > 68.
-  Justifikasi threshold  : p-value 5% meminimalkan Type I error dalam uji komparasi t-test, sedangkan skor 68 adalah ambang batas (benchmark) global untuk menentukan apakah sebuah sistem memiliki usability yang baik atau tidak[cite: 2].
+  Justifikasi threshold  :Nilai p < 0.05 digunakan untuk menolak hipotesis nol, dianalisis menggunakan **Wilcoxon Signed-Rank Test** untuk membandingkan observasi berpasangan jika data tidak berdistribusi normal.
 ```
 ---
 
