@@ -62,108 +62,96 @@ Jika rantai ini tidak lengkap, RQ belum mature. Bi-directional: RQ yang tidak bi
 
 ---
 
-## Template A.4 — RQ-Contribution-Hypothesis
+### **Template A.4 — RQ-Contribution-Hypothesis**
 
-```
-RQ-CONTRIBUTION-HYPOTHESIS
+#### **RQ-CONTRIBUTION-HYPOTHESIS**
 
-Gap Statement  : Meskipun layanan *Backend-as-a-Service* (BaaS) seperti Firebase terbukti dapat menyederhanakan proses pengembangan aplikasi karena pengembang tidak perlu membuat kode di sisi server [cite: 1], terdapat kekhawatiran mengenai *response time* ketika sistem harus melakukan proses autentikasi yang kompleks melalui infrastruktur *cloud* dibandingkan dengan database lokal. Penelitian sebelumnya telah membandingkan performa CRUD antara Firebase Realtime Database dan MySQL, namun belum secara spesifik mengevaluasi *trade-off* antara efisiensi waktu respon login dan tingkat keamanan fitur pada sistem *Admin Panel* menggunakan PostgreSQL manual (BCrypt) dibandingkan dengan Firebase Authentication.
+* **Gap Statement:** Belum ada studi yang mengevaluasi performa komparatif antara arsitektur relasional dan NoSQL menggunakan lapisan perantara modern (Prisma ORM) pada fungsionalitas spesifik dengan beban kerja ganda (kueri database sekaligus komputasi kriptografi *Bcrypt* pada lapisan aplikasi) di bawah kondisi beban kerja konkurensi tinggi (*high-concurrency*).
+* **Research Question:**
+    * **Tipe:** `[X] Comparison` `[ ] Improvement` `[ ] Exploratory`
+    * **Formulasi:** Apakah penggunaan pangkalan data berbasis dokumen MongoDB v7.0 menghasilkan rata-rata *latency* login yang sekurang-kurangnya 20% lebih rendah dan *throughput* (*requests per second*) yang lebih tinggi secara signifikan dibandingkan dengan pangkalan data relasional PostgreSQL v16 pada dataset 100.000 pengguna dengan simulasi beban 500 pengguna serentak (*concurrent users*) di bawah enkapsulasi Prisma ORM pada lingkungan Node.js?
+    * **Variabel IV:** Jenis Arsitektur Database Management System (DBMS) (PostgreSQL v16 vs MongoDB v7.0).
+    * **Variabel DV:** Performa Otentikasi Pengguna.
+    * **Metrik:** *Average Response Time* (milidetik) dan *Requests Per Second* (RPS).
+    * **Dataset:** 100.000 rekod data kredensial pengguna dummy (*seeding* berbasis faker.js).
+    * **Baseline:** PostgreSQL v16 yang diakses via Prisma ORM pada infrastruktur lokal host (*common practice*).
 
-Research Question:
-  Tipe         : [x] Comparison  [ ] Improvement  [ ] Exploratory
-  menghasilkan *response time* login yang lebih cepat secara signifikan dan memberikan skor fitur keamanan yang lebih tinggi dibandingkan dengan sistem autentikasi manual berbasis PostgreSQL pada aplikasi *Admin Panel*?
-  - **Variabel IV** : Metode Autentikasi (PostgreSQL Manual + BCrypt vs. Firebase Authentication SDK)
-  - **Variabel DV** : *Response Time* (Latensi) dan Skor Fitur Keamanan
-  - **Metrik** : Milidetik (ms) untuk waktu respon dan Checklist standar keamanan OWASP untuk skor keamanan
-  - **Dataset** : 50 iterasi percobaan login untuk setiap metode guna menjamin stabilitas data [cite: 1]
-  - **Baseline** : Performa sistem autentikasi database relasional (RDBMS) yang dikelola secara internal (PostgreSQL)
+**Quality Check RQ:**
+* `[X] Variabel spesifik`
+* `[X] Metrik jelas`
+* `[X] Baseline ada`
+* `[X] Konteks disebutkan`
+* `[X] Memerlukan eksperimen (bukan hanya survei literatur)`
 
-Quality Check RQ:
-  [x] Variabel spesifik
-  [x] Metrik jelas
-  [x] Baseline ada
-  [x] Konteks disebutkan
-  [x] Memerlukan eksperimen (bukan hanya survei literatur)
+**Contribution Statement:**
+* **Apa yang baru diketahui:** Karakteristik efisiensi, batas ambang batas (*bottleneck*), dan data empiris performa kueri indeks unik dari PostgreSQL dan MongoDB ketika dibebani proses komputasi paralel *hashing* keamanan pada lapisan perantara ORM.
+* **Jenis kontribusi:** `[ ] Improvement` `[X] Comparison` `[ ] Novel approach`
+* **Gap yang diisi:** *Context Gap* (fitur login gabungan kueri-kriptografi) dan *Method Gap* (pengukuran *overhead* Prisma ORM menggunakan injeksi beban Autocannon).
 
-Contribution Statement:
-  Apa yang baru diketahui : Perbandingan empiris mengenai efisiensi waktu respon autentikasi antara sistem yang dibangun manual dengan sistem *cloud-managed*, serta pemetaan fitur keamanan yang didapatkan dari masing-masing metode.
-  Jenis kontribusi        : [ ] Improvement  [x] Comparison  [ ] Novel approach
-  Gap yang diisi          :Memberikan data valid bagi pengembang dalam memilih arsitektur autentikasi yang tepat dengan mempertimbangkan faktor performa dan keamanan secara bersamaan.
+**Hypothesis Pair:**
+* **H₀:** $\mu_{\text{Latency MongoDB}} \ge 0.80 \times \mu_{\text{Latency PostgreSQL}}$ dan $\mu_{\text{Throughput MongoDB}} \le \mu_{\text{Throughput PostgreSQL}}$ *(Tidak ada keunggulan performa signifikan pada MongoDB sekurang-kurangnya 20% lebih cepat untuk latency dan lebih tinggi untuk throughput dibanding PostgreSQL).*
+* **H₁:** $\mu_{\text{Latency MongoDB}} < 0.80 \times \mu_{\text{Latency PostgreSQL}}$ dan $\mu_{\text{Throughput MongoDB}} > \mu_{\text{Throughput PostgreSQL}}$ *(MongoDB menghasilkan rata-rata latency login sekurang-kurangnya 20% lebih rendah dan throughput yang secara signifikan lebih tinggi dibanding PostgreSQL).*
+* **Threshold:** Perbedaan rata-rata performa $\ge$ 20% pada taraf signifikansi statistik $\alpha = 0.05$.
+* **Justifikasi threshold:** Batas minimum signifikansi praktis (*practical significance*) di industri rekayasa perangkat lunak untuk menjustifikasi biaya migrasi arsitektur pangkalan data produksi.
 
-Hypothesis Pair:
-  H₀ : TFirebase Realtime Database response time performance doing login operation is worse than or equal to PostgreSQL Database manual.
-  H₁ : Firebase Realtime Database response time performance doing login operation is better than PostgreSQL Database manual.
-  Threshold              : p-value < 0.05 (untuk uji waktu) dan Skor SUS > 68.
-  Justifikasi threshold  :Nilai p < 0.05 digunakan untuk menolak hipotesis nol, dianalisis menggunakan **Wilcoxon Signed-Rank Test** untuk membandingkan observasi berpasangan jika data tidak berdistribusi normal.
-```
 ---
 
-## Latihan 1 — Dari Gap ke RQ
+### **Latihan 1 — Dari Gap ke RQ**
 
-Gunakan gap yang ditemukan di WS-03. Transformasikan menjadi Research Question.
+* **Gap dari WS-03:** Riset terdahulu hanya menguji operasi CRUD murni terisolasi, memicu kontradiksi hasil akibat perbedaan perkakas uji, dan belum mengevaluasi performa gabungan kueri data terindeks dengan beban komputasi *hashing* aplikasi (*Bcrypt*) pada ORM modern dalam kondisi konkurensi tinggi.
+* **RQ versi pertama (tulis bebas):** Bagaimana perbandingan kecepatan login antara PostgreSQL dan MongoDB kalau dipakai ngoding di Node.js pas usernya banyak banget?
 
-**Gap dari WS-03:** ayoritas petani/pelaku agribisnis memiliki literasi digital terbatas dan sering kesulitan dengan aplikasi yang antarmukanya kompleks. Pembukuan manual memakan waktu, namun belum ada evaluasi komparatif mengenai efisiensi waktu dan usability untuk solusi arsitektur aplikasi pencatatan ringan yang langsung terhubung ke cloud spreadsheet.
-**RQ versi pertama (tulis bebas):**
-> Apakah aplikasi web Catat Yuk Tan lebih baik dan lebih cepat dipakai oleh petani daripada mencatat di buku kas biasa?
-
-**Evaluasi RQ:**
+#### **Evaluasi RQ:**
 
 | Komponen | Ada? | Isi |
-|----------|------|-----|
-| Metode spesifik | ya |Aplikasi web vs Buku kas manual |
-| Metrik terukur |tidak |Kosong (hanya menyebut "lebih baik dan lebih cepat") |
-| Baseline |ya |Buku kas biasa / manual |
-| Dataset/konteks | tidak|"Petani" masih terlalu luas |
+| :--- | :---: | :--- |
+| **Metode spesifik** | Ya | Penggunaan PostgreSQL v16 vs MongoDB v7.0 melalui perantara Prisma ORM. |
+| **Metrik terukur** | Ya | *Latency* (*Average Response Time* dalam ms) dan *Throughput* (*Requests Per Second*). |
+| **Baseline** | Ya | PostgreSQL v16 (Konfigurasi *Single Index* lokal). |
+| **Dataset/konteks** | Ya | 100.000 data pengguna dummy / Beban stress-test 500 *concurrent users* via Autocannon. |
 
-**Tipe RQ:** [x] Comparison / [ ] Improvement / [ ] Exploratory
+* **Tipe RQ:** `[X] Comparison` / `[ ] Improvement` / `[ ] Exploratory`
+* **RQ versi revisi (setelah evaluasi):** Apakah penggunaan MongoDB v7.0 menghasilkan rata-rata *latency* login yang sekurang-kurangnya 20% lebih rendah dan *throughput* yang lebih tinggi secara signifikan dibandingkan dengan PostgreSQL v16 pada dataset 100.000 pengguna dengan simulasi beban 500 pengguna serentak di bawah enkapsulasi Prisma ORM pada lingkungan Node.js?
 
-**RQ versi revisi (setelah evaluasi):**
-> Apakah penggunaan aplikasi pencatatan keuangan agribisnis berbasis web memangkas waktu entri data secara signifikan dan mencapai skor System Usability Scale (SUS) yang lebih tinggi dibandingkan dengan metode pembukuan manual pada responden pelaku agribisnis?
 ---
 
-## Latihan 2 — Hypothesis Pair
+### **Latihan 2 — Hypothesis Pair**
 
-Rumuskan pasangan hipotesis dari RQ di Latihan 1.
+**Rumuskan pasangan hipotesis dari RQ di Latihan 1.**
 
 | Komponen | Isi |
-|----------|-----|
-| H₀ | Tidak ada perbedaan signifikan waktu entri data antara aplikasi web dan manual, serta skor SUS aplikasi berada di bawah atau sama dengan ambang batas global 68. |
-| H₁ |aplikasi web memangkas waktu entri data secara signifikan dibandingkan manual, dan mencapai skor SUS di atas 68 yang mengindikasikan usability tinggi. |
-| Metrik |Waktu penyelesaian tugas (Task Completion Time dalam detik) dan skor System Usability Scale (SUS) |
-| Threshold |p-value < 0.05 untuk uji beda waktu, dan Skor SUS > 68. |
-| Justifikasi threshold |p-value 5% adalah standar statistik meminimalkan Type I error, sedangkan 68 adalah ambang batas rata-rata global untuk metode SUS. |
+| :--- | :--- |
+| **H₀** | Tidak ada perbedaan signifikan pada purata *latency* dan *throughput* kueri autentikasi login antara PostgreSQL v16 dan MongoDB v7.0 di bawah beban 500 pengguna serentak pada dataset 100.000 rekod. |
+| **H₁** | MongoDB v7.0 menghasilkan purata *latency* kueri autentikasi login yang secara signifikan sekurang-kurangnya 20% lebih rendah dan *throughput* yang lebih tinggi dibandingkan dengan PostgreSQL v16 pada kondisi uji yang sama. |
+| **Metrik** | *Latency* (ms) dan *Throughput* (req/sec). |
+| **Threshold** | Selisih nilai purata $\ge$ 20% dengan nilai p-value uji statistik $< 0.05$. |
+| **Justifikasi threshold** | Batas toleransi keuntungan performa arsitektur *schemaless* untuk menutupi hilangnya fitur integritas referensial (ACID) yang ada pada SQL. |
 
-**Apakah hipotesis ini falsifiable?** [x] Ya / [ ] Tidak
-> Bagaimana cara membuktikannya salah? Melakukan eksperimen time-motion dan menyebarkan kuesioner SUS. Jika hasil uji t-test menunjukkan p-value > 0.05 (waktu entri sama lamanya) atau skor akhir SUS hasil perkalian respons pengguna lebih kecil dari 68, maka H₁ gugur dan H₀ diterima.
+* **Apakah hipotesis ini falsifiable?** `[X] Ya` / `[ ] Tidak`
+* **Bagaimana cara membuktikannya salah?** Menjalankan eksperimen stress-test sebanyak 30 replikasi penuh, melakukan analisis statistik komparatif (*Independent Sample T-Test*), dan mendapati hasil bahwa nilai p-value $> 0.05$ (tidak signifikan) atau selisih rata-rata *latency* MongoDB tidak mencapai margin keunggulan 20% dibanding PostgreSQL.
 
 ---
 
-## Latihan 3 — Rantai Operasionalisasi
+### **Latihan 3 — Rantai Operasionalisasi**
 
-Lengkapi rantai dari RQ hingga metode analisis.
+**Lengkapi rantai dari RQ hingga metode analisis.**
 
 | Tahap | Isi |
-|-------|-----|
-| RQ | Apakah penggunaan aplikasi berbasis web memangkas waktu entri dan mencapai skor SUS lebih tinggi dari manual?|
-| Variable (IV) | Metode antarmuka pencatatan (Aplikasi Web vs Buku Kas Manual). |
-| Variable (DV) |Efisiensi operasional dan kepuasan/penerimaan pengguna. |
-| Metric |Durasi waktu (detik) dan Usability Score (0-100).|
-| Data source |Rekaman stopwatch saat responden mengerjakan skenario tugas (task scenario) dan respons 10 butir pertanyaan kuesioner skala Likert (1-5). |
-| Analysis method |Paired T-test (untuk membandingkan metrik waktu) dan formula konversi perhitungan SUS. |
+| :--- | :--- |
+| **RQ** | Apakah MongoDB v7.0 menghasilkan rata-rata *latency* login yang sekurang-kurangnya 20% lebih rendah dan *throughput* yang lebih tinggi secara signifikan dibandingkan dengan PostgreSQL v16... |
+| **Variable (IV)** | Jenis Arsitektur DBMS (PostgreSQL v16 vs MongoDB v7.0). |
+| **Variable (DV)** | Performa Fitur Autentikasi Sistem. |
+| **Metric** | 1. *Average Response Time* (ms)<br>2. *Requests Per Second* (RPS) |
+| **Data source** | Berkas log mentah (*raw log output*) berformat JSON hasil eksekusi *automated client testing tool* Autocannon. |
+| **Analysis method** | Uji Normalitas (*Shapiro-Wilk*) dilanjutkan dengan Uji Komparatif Dua Sampel Saling Bebas (*Independent Sample T-Test* atau *Mann-Whitney U Test*) pada taraf $\alpha = 0.05$. |
 
-**Apakah rantai lengkap?** [x] Ya / [ ] Tidak
-> Jika tidak, tahap mana yang perlu direvisi? ______________
+* **Apakah rantai lengkap?** `[X] Ya` / `[ ] Tidak`
+* **Jika tidak, tahap mana yang perlu direvisi?** — (Sudah lengkap dan sinkron dari hulu ke hilir).
 
 ---
 
-## Refleksi
+### **Refleksi**
 
-> Ambil satu judul skripsi/paper yang pernah dibaca. Coba ekstrak RQ-nya. Apakah RQ tersebut memenuhi semua komponen (metode, metrik, baseline, konteks)? Jika tidak, apa yang hilang?
-
-**Judul:** "Evaluation of Smart Agriculture Prototype using SUS Method".
-
-**RQ yang diekstrak:**Bagaimana tingkat fungsionalitas dan skor usability dari prototipe aplikasi pertanian pintar (smart farming) berbasis mobile ketika dievaluasi oleh responden petani berusia 23-70 tahun menggunakan metode Black Box dan SUS?.
-
-**Komponen yang hilang:** Di dalam paper tersebut, penelitian lebih condong ke arah Exploratory / Improvement sistem mandiri, sehingga tidak ada Baseline komparatif (metode pesaing) dalam perumusan eksperimennya. Sistem hanya dievaluasi secara terisolasi lalu skor SUS akhirnya dibandingkan dengan standar teoretis (nilai 68), tanpa membandingkannya dengan aplikasi sejenis atau metode konvensional secara head-to-head.
-=======
-**Komponen yang hilang:** Di dalam paper tersebut, penelitian lebih condong ke arah Exploratory / Improvement sistem mandiri, sehingga tidak ada Baseline komparatif (metode pesaing) dalam perumusan eksperimennya. Sistem hanya dievaluasi secara terisolasi lalu skor SUS akhirnya dibandingkan dengan standar teoretis (nilai 68), tanpa membandingkannya dengan aplikasi sejenis atau metode konvensional secara head-to-head.
+* **Judul:** Analisis Perbandingan Performansi Waktu Respons Kueri Antara MySQL PHP 7.2.27 Dan NoSQL MongoDB *(Olivia dkk., 2020)*.
+* **RQ yang diekstrak:** Bagaimana perbandingan performansi waktu respons kueri *Data Manipulation Language* (DML) antara penggunaan MySQL dan NoSQL MongoDB?
+* **Komponen yang hilang:** RQ dalam paper asli tersebut kehilangan **Kontoxt Kondisi Beban Trafik** (tidak menyebutkan volume data pengujian atau tingkat konkurensi pengguna di dalam pertanyaan risetnya, sehingga pengujian hanya diukur pada *single request* yang kurang mencerminkan kondisi riil server produksi).
