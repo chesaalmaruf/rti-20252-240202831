@@ -43,6 +43,19 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 - **Configuration-driven** — Ubah config (YAML/JSON), bukan code
 - **Feature toggles** — On/off flag untuk ablation study
 
+  Contoh config YAML dengan feature toggles:
+  ```yaml
+  model:
+    type: cnn          # IV: ganti "rf" untuk kondisi baseline
+  features:
+    use_temporal: true  # toggle komponen temporal
+    use_normalization: true  # toggle preprocessing
+  experiment:
+    seed: 42
+    runs: 5
+  ```
+  Dengan pendekatan ini, berbeda kondisi eksperimen = berbeda satu baris config, **tanpa mengubah kode**.
+
 ### Research vs Engineering
 
 | Aspek | Engineering | Research |
@@ -125,12 +138,24 @@ Evaluasi desain sistem terhadap 4 prinsip.
 
 Dalam kajian prestasi senario log masuk, kita mengandaikan kependaman dipengaruhi oleh 3 faktor (lapisan perisian): jenis pangkalan data, lapisan ORM, dan lapisan kriptografi.
 
+
 | Kondisi | Komponen A (Lapisan Kriptografi) | Komponen B (Lapisan Akses Data) | Komponen C (Sistem Pangkalan Data) | Hasil yang Diharapkan |
 |---------|--------------------------------|-------------------------------|----------------------------------|----------------------|
 | **Full** | ✅ *Bcrypt Hashing* | ✅ *Prisma ORM* | ✅ *MongoDB (NoSQL)* | *Baseline* prestasi dunia sebenar (Tinggi kependaman kerana proses hashing yang berat). |
 | **– A** | ❌ *Plaintext (Tiada Hashing)* | ✅ *Prisma ORM* | ✅ *MongoDB (NoSQL)* | Menunjukkan kependaman dan had truput sebenar pangkalan data. |
 | **– B** | ✅ *Bcrypt Hashing* | ❌ *Native Driver (Mongoose)* | ✅ *MongoDB (NoSQL)* | Mengukur penalti prestasi (*overhead*) akibat penggunaan *Prisma ORM*. |
 | **– C** | ✅ *Bcrypt Hashing* | ✅ *Prisma ORM* | ❌ *PostgreSQL (SQL)* | Menjawab persoalan kajian utama sama ada *PostgreSQL* lebih efisien pada tahap seni bina ini. |
+=======
+> **Panduan jumlah kondisi:** Untuk 3 komponen (A, B, C), kondisi minimal yang direkomendasikan:
+> Full + (-A) + (-B) + (-C) = **4 kondisi dasar**. Jika waktu memungkinkan, tambahkan kombinasi ganda: (-A,-B), (-A,-C), (-B,-C) = **7 kondisi**. Sesuaikan dengan *computational cost* dan tenggat waktu penelitian.
+
+| Kondisi | Komponen A | Komponen B | Komponen C | Hasil yang Diharapkan |
+|---------|-----------|-----------|-----------|----------------------|
+| Full | *Contoh: ✅ CNN* | *Contoh: ✅ Temporal features* | *Contoh: ✅ Z-score norm* | *Baseline penuh* |
+| – A | ❌ (ganti RF) | ✅ | ✅ | |
+| – B | ✅ | ❌ (tanpa temporal) | ✅ | |
+| – C | ✅ | ✅ | ❌ (tanpa normalisasi) | |
+>>>>>>> upstream/main
 
 **Komponen mana yang diprediksi paling berkontribusi?** Komponen A (Lapisan Kriptografi / *Bcrypt*).
 **Mengapa?**
