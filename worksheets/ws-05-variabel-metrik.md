@@ -63,7 +63,7 @@ Metrik harus ditentukan **sebelum** eksperimen. Memilih metrik setelah melihat d
 
 
 ## Template A.5 — Definisi Variabel, Metrik & Justifikasi
-```
+
 **VARIABLE & METRIC DEFINITION**
 
 **Research Question:** Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
@@ -80,7 +80,7 @@ Metrik harus ditentukan **sebelum** eksperimen. Memilih metrik setelah melihat d
 * [x] **Setiap langkah terdokumentasi:** Rantai dari RQ ke instrumen ukur sudah terurai jelas.
 * [x] **Tidak ada "lompatan logis":** Latency dan Throughput adalah manifestasi teknis yang tepat untuk konsep "performa".
 * [x] **Metrik mengukur apa yang dimaksud (construct validity):** RPS secara akurat mengukur kapasitas kerja sistem per satuan waktu.
-```
+
 ---
 
 ## Latihan 1 — Operationalization Chain

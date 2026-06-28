@@ -64,7 +64,7 @@ Masalah riset yang layak harus memenuhi 5 kriteria:
 
 
 ## Template A.2 — Problem Statement Builder
-```
+
 PROBLEM STATEMENT BUILDER
 
 Domain & Konteks
@@ -95,7 +95,7 @@ Problem Quality Check
 
 Problem Statement (1 paragraf):
   Dalam pengembangan aplikasi web, pemilihan basis data sering kali dilakukan tanpa dasar data performa yang kuat untuk beban kerja spesifik seperti autentikasi. Meskipun klaim umum menyebutkan NoSQL lebih cepat untuk data besar, terdapat gap pengetahuan mengenai titik optimal di mana PostgreSQL mulai tertinggal oleh MongoDB dalam menangani request login secara simultan. Penelitian ini bertujuan membandingkan latency dan throughput kedua database tersebut pada skala data hingga 100.000 record guna memberikan rekomendasi pemilihan DBMS yang didorong oleh data (data-driven) untuk sistem autentikasi.
-```
+
 ---
 
 ## Latihan 1 — Dari Topik ke Masalah Riset

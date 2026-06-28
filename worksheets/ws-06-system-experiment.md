@@ -64,7 +64,6 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 
 ## Template A.6 — Mapping RQ ke Arsitektur Sistem
 
-```
 **SYSTEM-EXPERIMENT MAPPING**
 
 **Research Question:** Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
@@ -88,7 +87,7 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 * **Input data:** *Payload* JSON berisi `{"email": "userX@test.com", "password": "password123"}` (disimulasikan dari 100.000 *dummy records*).
 * **Parameter:** Durasi uji 30 detik (`-d 30`), konkurensi 500 koneksi (`-c 500`), *pipelining* diaktifkan.
 * **Output format:** Log *console* dan *file* laporan JSON yang berisi nilai rata-rata, persentil, dan batas toleransi *latency/throughput*.
-```
+
 ---
 
 ## Latihan 1 — Variable-to-Component Mapping

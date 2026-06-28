@@ -65,7 +65,6 @@ Ancaman validitas harus diidentifikasi **sebelum** eksperimen dan mitigasinya di
 
 ## Template A.7 — Desain Eksperimen Lengkap
 
-```
 EXPERIMENT DESIGN
 
 Research Question : Adakah penggunaan MongoDB menghasilkan rata-rata *latency* login yang lebih rendah dan *throughput* yang lebih tinggi dibandingkan PostgreSQL pada dataset 100.000 user dengan simulasi 500 *concurrent users*?
@@ -100,7 +99,7 @@ Uji statistik   : Independent Sample T-Test (atau Mann-Whitney U jika data tidak
 Justifikasi     : Membandingkan nilai rata-rata dari dua kelompok eksperimen yang sepenuhnya independen (PostgreSQL vs MongoDB).
 Alpha           : 0.05
 Effect size min : Cohen's d > 0.5 (Tingkat efektivitas sedang/terasa perbedaannya).
-```
+
 ---
 
 ## Latihan 1 — Desain Eksperimen

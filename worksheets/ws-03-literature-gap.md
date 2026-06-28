@@ -58,7 +58,6 @@ Membandingkan deep learning 2024 dengan decision tree sederhana tanpa justifikas
 
 ## Template A.3 — Literature Mapping & Gap Identification
 
-```
 **LITERATURE MAPPING**
 
 **Topik** : Analisis Perbandingan Performa Latency dan Throughput PostgreSQL vs MongoDB pada Skema Autentikasi Pengguna.
@@ -101,7 +100,7 @@ Membandingkan deep learning 2024 dengan decision tree sederhana tanpa justifikas
 |----------|-----------|---------------|--------|
 | PostgreSQL + Raw Query | Pembanding performa asli database relasional tanpa *overhead* *driver*. | Praktik tradisional (*common practice*) yang paling diandalkan kestabilannya. | Tavares et al. (2020) |
 | MongoDB + Prisma ORM | Menyimulasikan tumpukan teknologi modern untuk NoSQL di Node.js. | Mewakili tren pengembangan sistem saat ini. | Pujas et al. (2024) |
-```
+
 
 ---
 
