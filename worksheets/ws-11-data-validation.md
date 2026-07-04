@@ -66,30 +66,30 @@ Jika gagal di langkah awal → tidak perlu lanjut.
 DATA VALIDATION CHECKLIST
 
 Completeness:
-  [ ] Semua skenario tercakup
-  [ ] Jumlah run sesuai rencana
-  [ ] Tidak ada file output hilang
-  Missing: ____ dari ____ data points
+  [X] Semua skenario tercakup
+  [X] Jumlah run sesuai rencana
+  [X] Tidak ada file output hilang
+  Missing: 0 dari 6 data points
 
 Format Consistency:
-  [ ] Semua file format sama (CSV/JSON/...)
-  [ ] Header konsisten
-  [ ] Tipe data konsisten (numerik tetap numerik)
+  [X] Semua file format sama (JSON laporan eksperimen)
+  [X] Header konsisten
+  [X] Tipe data konsisten (numerik tetap numerik)
 
 Range & Logic:
-  [ ] Nilai dalam range masuk akal
-  [ ] Tidak ada waktu negatif
-  [ ] Metrik 0–100%, tidak di luar range
-  Anomali ditemukan: ____________________
+  [X] Nilai dalam range masuk akal
+  [X] Tidak ada waktu negatif
+  [X] Metrik throughput dan latency tidak di luar range fisik
+  Anomali ditemukan: Throughput MongoDB anjlok ekstrim (0.31 RPS) akibat *CPU Thermal Throttling*.
 
 Cross-Validation:
-  [ ] Run identik → hasil mendekati
-  [ ] Trend konsisten dengan ekspektasi teori
+  [X] Run identik → hasil mendekati
+  [X] Trend konsisten dengan ekspektasi (CPU 100% memicu timeout)
 
 Keputusan:
-  [ ] Data siap analisis
+  [X] Data siap analisis
   [ ] Perlu cleaning
-  [ ] Perlu re-run (skenario: ____)
+  [ ] Perlu re-run
 ```
 
 ---
@@ -100,15 +100,13 @@ Verifikasi apakah semua data yang direncanakan sudah terkumpul.
 
 | Skenario | Run Direncanakan | Run Tercatat | Missing | Alasan |
 |----------|-----------------|-------------|---------|--------|
-| *Contoh: BERT, DS-1* | *10* | *10* | *0* | *—* |
-| *LSTM, DS-3* | *10* | *8* | *2* | *OOM pada run 7 & 9* |
-| | | | | |
-| | | | | |
+| *PostgreSQL (c=500)* | *3* | *3* | *0* | *Data terekam penuh via Autocannon* |
+| *MongoDB (c=500)* | *3* | *3* | *0* | *Data terekam penuh via Autocannon* |
 
-**Total expected:** ____ | **Total actual:** ____ | **Missing:** ____
+**Total expected:** 6 | **Total actual:** 6 | **Missing:** 0
 
 **Keputusan untuk data missing:**
-> ___________________________________________________
+> Tidak ada data *missing*. Semua data log telah diekstrak sukses ke dalam format JSON.
 
 ---
 
@@ -118,25 +116,22 @@ Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
 
 **Dataset sampel (atau data Anda sendiri):**
 
-| Run | Accuracy (%) |
+| Run | MongoDB Throughput (RPS) |
 |-----|-------------|
-| 1 | *91.2* |
-| 2 | *90.8* |
-| 3 | *91.5* |
-| 4 | *78.3* |
-| 5 | *91.0* |
+| 1 | *0.31* |
+| 2 | *0.25* |
+| 3 | *0.30* |
+| 4 | *14.67 (Postgres)* |
+| 5 | *14.50 (Postgres)* |
 
-**Deteksi outlier:**
-- Q1 = ____ | Q3 = ____ | IQR = ____
-- Batas bawah (Q1 - 1.5×IQR) = ____
-- Batas atas (Q3 + 1.5×IQR) = ____
-- Outlier terdeteksi: ____
+**Deteksi outlier (Konteks Eksperimen MongoDB):**
+- Nilai MongoDB terlalu ekstrim mendekati 0 jika dibandingkan dengan PostgreSQL (14.67 RPS). Ini adalah *contextual anomaly*.
 
 **Investigasi (untuk setiap outlier):**
 
 | Outlier | Nilai | Kemungkinan Penyebab | Keputusan |
 |---------|-------|---------------------|-----------|
-| *Run 4* | *78.3* | *Contoh: thermal throttling setelah 3 run berturut* | *Re-run dengan cooling interval* |
+| *Throughput Mongo Drop* | *0.31 RPS* | *CPU laptop mencapai batas thermal throttling dari pengujian Bcrypt di run sebelumnya, menyebabkan event-loop Node.js terhambat massal.* | *Analisis batas perangkat (Boundary condition), tambahkan mitigasi jeda istirahat (cooldown) antar run 5 menit.* |
 
 ---
 
@@ -144,12 +139,12 @@ Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
 
 Buat laporan validasi ringkas untuk dataset eksperimen Anda.
 
-**1. Completeness:** ____% data terkumpul
-**2. Format:** [ ] Konsisten / [ ] Ada inkonsistensi: ____
-**3. Range check (anomali):** ____
-**4. Logic check:** [ ] Parameter sesuai plan / [ ] Ada ketidaksesuaian: ____
+**1. Completeness:** 100% data terkumpul
+**2. Format:** [X] Konsisten / [ ] Ada inkonsistensi: -
+**3. Range check (anomali):** Ditemukan performa ekstrim rendah pada MongoDB yang dipicu oleh CPU bottleneck (*Application Layer*), bukan murni dari kendala *Database Layer*.
+**4. Logic check:** [X] Parameter sesuai plan / [ ] Ada ketidaksesuaian: -
 
-**Kesimpulan:** [ ] Data siap analisis / [ ] Perlu tindakan: ____
+**Kesimpulan:** [X] Data siap analisis / [ ] Perlu tindakan: Lanjutkan ke interpretasi kegagalan (*failure analysis*).
 
 ---
 
@@ -157,5 +152,5 @@ Buat laporan validasi ringkas untuk dataset eksperimen Anda.
 
 > Apa perbedaan antara "data yang benar" dan "data yang dipercaya"? Mengapa proses validasi formal diperlukan meskipun data dikumpulkan secara otomatis?
 
-> ___________________________________________________
-> ___________________________________________________
+> "Data yang benar" adalah data yang dicatat secara akurat oleh sistem (misalnya: tercatat 1992 *timeouts* dengan tepat tanpa ada log yang korup). Sedangkan "Data yang dipercaya" adalah data yang telah diyakini tidak terkontaminasi variabel perancu eksternal yang merusak validitasnya (misal: *timeout* terjadi murni dari kemampuan DBMS, bukan gara-gara laptop mendadak menjalankan *Windows Update* atau *thermal throttling*).
+> Proses validasi menjembatani data mentah agar konteksnya ditelaah terlebih dahulu sebelum ditarik menjadi kesimpulan buta.
