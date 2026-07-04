@@ -121,17 +121,17 @@ Rencanakan presentasi 15 menit untuk riset Anda.
 
 | # | Pesan Utama | Visual yang Digunakan | Waktu |
 |---|-------------|----------------------|-------|
-| 1 | *Contoh: Judul + konteks — rekomendasi vs kepuasan* | *Title slide, gambar sistem* | *1 min* |
-| 2 | *Contoh: Problem — RMSE tinggi tapi satisfaction rendah (45/100)* | *Bar chart: satisfaction vs RMSE per sistem* | *2 min* |
-| 3 | *Contoh: Gap + RQ — belum ada CF+context untuk satisfaction* | *Tabel gap literatur* | *1.5 min* |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
+| 1 | *Judul & Konteks: Komparasi Postgres vs Mongo di Auth Beban Tinggi* | *Title slide, arsitektur Node.js sederhana* | *1 min* |
+| 2 | *Problem: Bcrypt sering mencekik (throttle) I/O pada Node.js* | *Diagram event-loop Node.js terblokir Bcrypt* | *2 min* |
+| 3 | *Gap & RQ: Mana DB (SQL vs NoSQL) yang lebih stabil di beban CPU ekstrem?* | *Highlight RQ* | *1 min* |
+| 4 | *Metode: 500 koneksi, Prisma, Autocannon selama 30 detik* | *Diagram pipeline test* | *2 min* |
+| 5 | *Hasil (Tabel): Postgres tembus 14.67 RPS, Mongo kolaps di 0.31 RPS* | *Tabel agregat RPS & Latency* | *2 min* |
+| 6 | *Hasil (Grafik): Time-series membuktikan Mongo timeout massal sejak awal* | *Line chart dari Autocannon* | *2 min* |
+| 7 | *Analisis Gagal: Mongo lumpuh murni akibat CPU Thermal Throttling dari Bcrypt* | *Grafik monitor resource CPU* | *2 min* |
+| 8 | *Batasan Riset: Hardware (AMD Athlon) cepat panas tanpa pendingin aktif* | *Highlight spek hardware* | *1.5 min* |
+| 9 | *Kesimpulan: Masalah ada di lapisan Aplikasi (Bcrypt), bukan di Database* | *Closing message: Pisahkan service enkripsi* | *1 min* |
 
-**Total waktu estimasi:** ____ menit
+**Total waktu estimasi:** 14.5 menit
 
 ---
 
@@ -141,11 +141,11 @@ Prediksi 5 pertanyaan yang mungkin diajukan penguji, lalu siapkan jawaban CER.
 
 | # | Kategori | Pertanyaan | Claim | Evidence | Reasoning |
 |---|----------|-----------|-------|----------|-----------|
-| 1 | *Problem* | *Contoh: Mengapa fokus kepuasan, bukan akurasi?* | *Akurasi tinggi tidak menjamin kepuasan* | *Survey: 45/100 satisfaction meski RMSE 0.87* | *Gap antara metrik teknis dan pengalaman pengguna* |
-| 2 | *Method* | *Contoh: Mengapa hanya 3 dataset?* | *3 dataset mewakili variasi: small-clean, medium-clean, medium-noisy* | *Tabel karakteristik dataset di Bab Method* | *Generalisasi perlu validasi lanjut — tercatat sebagai limitasi* |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | *Problem* | *Mengapa fokus ke Bcrypt, bukan optimasi Query DB?* | *Bcrypt memonopoli CPU secara sinkron* | *Sifat Node.js yang single-threaded* | *Menguji DB tanpa mempertimbangkan antrian Bcrypt di Node.js adalah pengujian yang tidak realistis untuk endpoint Auth.* |
+| 2 | *Method* | *Mengapa hanya diuji selama 30 detik?* | *Cukup untuk mencapai steady-state tanpa melelehkan hardware* | *Log Autocannon memperlihatkan pola tetap di detik ke-10* | *Durasi lebih lama justru meningkatkan bias Thermal Throttling yang merusak akurasi komparasi.* |
+| 3 | *Results* | *Bukankah Mongo memang lambat untuk relasi?* | *Kegagalan Mongo bukan dari struktur data, tapi CPU bottleneck* | *Tercatat 1992 Timeout, bukan query lambat* | *Event-loop Node.js sudah mati sebelum request sempat sampai ke mesin database MongoDB.* |
+| 4 | *Generalization* | *Apakah hasil ini berlaku untuk Go atau Java?* | *Tidak (terbatas pada Node.js)* | *Arsitektur single-thread Node.js* | *Go/Java menggunakan multithreading alami, sehingga enkripsi Bcrypt mungkin tidak mengunci thread koneksi DB.* |
+| 5 | *Generalization* | *Apakah akan sama hasilnya jika di cloud (AWS)?* | *Tergantung alokasi CPU vCore* | *Laptop AMD 7320U cepat throttling* | *Di cloud dengan CPU garansi tinggi, Mongo mungkin tidak sampai Timeout massal seperti ini.* |
 
 ---
 
@@ -154,15 +154,15 @@ Prediksi 5 pertanyaan yang mungkin diajukan penguji, lalu siapkan jawaban CER.
 Minta teman/kolega mengajukan 3 pertanyaan tentang riset Anda. Catat pertanyaan dan evaluasi jawaban Anda.
 
 | # | Pertanyaan | Jawaban Saya | Evaluasi |
-|---|-----------|-------------|---------|| *1* | *Contoh: "Mengapa tidak membandingkan dengan metode Y?"* | *Contoh: "Karena Y memerlukan dataset labeled yang tidak tersedia. Disebutkan sebagai limitasi di halaman X."* | *[✓] Direct [✓] Data-based [✓] Honest* || 1 | | | [ ] Direct [ ] Data-based [ ] Honest |
-| 2 | | | [ ] Direct [ ] Data-based [ ] Honest |
-| 3 | | | [ ] Direct [ ] Data-based [ ] Honest |
+|---|-----------|-------------|---------|| *1* | *Contoh: "Mengapa tidak membandingkan dengan metode Y?"* | *Contoh: "Karena Y memerlukan dataset labeled yang tidak tersedia. Disebutkan sebagai limitasi di halaman X."* | *[✓] Direct [✓] Data-based [✓] Honest* || 1 | *"Mengapa tes Mongo dilakukan SETELAH Postgres tanpa jeda di draf awal?"* | *"Itu adalah kesalahan fatal yang kemudian kami mitigasi dengan jeda cooldown 5 menit, tertulis di WS-13."* | *[X] Direct [X] Data-based [X] Honest* |
+| 2 | *"Bukannya Bcrypt bisa dipindah ke worker thread?"* | *"Benar, namun riset ini menguji arsitektur monolitik konvensional sebagai baseline."* | *[X] Direct [X] Data-based [X] Honest* |
+| 3 | *"Kenapa tidak pakai koneksi lokal Unix Socket agar lebih fair?"* | *"Karena pengujian di dunia nyata mayoritas menggunakan koneksi TCP/IP untuk DB."* | *[X] Direct [X] Data-based [X] Honest* |
 
 **Pertanyaan yang paling sulit dijawab:**
-> ___________________________________________________
+> Pertanyaan mengenai validitas hardware yang digunakan, mengingat laptop *low-end* (AMD Athlon) sangat rentan bias suhu (kepanasan).
 
 **Apa yang perlu disiapkan lebih baik:**
-> ___________________________________________________
+> Mempersiapkan log pantauan suhu CPU aktual (*Hardware Monitor*) di slide cadangan (*appendix*) untuk membuktikan momen terjadinya *Thermal Throttling*.
 
 ---
 
@@ -171,7 +171,7 @@ Minta teman/kolega mengajukan 3 pertanyaan tentang riset Anda. Catat pertanyaan 
 > Dari seluruh proses WS-01 sampai WS-16 — dari paradigma riset hingga presentasi — bagian mana yang paling mengubah cara Anda berpikir tentang riset? Apa satu hal yang akan selalu Anda terapkan di riset berikutnya?
 
 **Insight terbesar:**
-> ___________________________________________________
+> Kegagalan pengujian eksperimen (*seperti saat MongoDB timeout masif*) BUKAN berarti penelitian itu gagal. Kegagalan tersebut justru membongkar anomali perilaku sistem (bahwa CPU *bottleneck* dari Bcrypt lebih fatal ketimbang kapabilitas asli dari *Database*). Temuan penyebab di baliknya (*Failure Analysis*) adalah kontribusi keilmuan yang valid.
 
 **Yang akan selalu diterapkan:**
-> ___________________________________________________
+> Pendekatan metodologis berbasis *Claim-Evidence-Reasoning (CER)* dalam mendebat argumen, serta merancang skenario mitigasi bias (seperti jeda istirahat antar-run *cooldown*) dengan sangat ketat pada pengujian yang melibatkan stres perangkat keras (*Hardware*).
