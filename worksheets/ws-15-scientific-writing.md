@@ -84,28 +84,28 @@ Metrik-X     ✗      ✗       ✓ ←     ✗        ✗
 ```
 PAPER STRUCTURE CHECKLIST
 
-Title   : ____________________
-Target  : [ ] Jurnal  [ ] Konferensi  [ ] Laporan
+Title   : Pengaruh Jenis Arsitektur DBMS (PostgreSQL vs MongoDB) terhadap Latency dan Throughput pada Proses Autentikasi Beban Tinggi
+Target  : [X] Jurnal  [ ] Konferensi  [X] Laporan
 
 Section Check:
-  [ ] Abstract — masalah, metode, hasil utama, kontribusi (max 250 kata)
-  [ ] Introduction — konteks → gap → RQ → kontribusi → struktur paper
-  [ ] Related Work — concept-centric, gap positioning
-  [ ] Method — reproducible: desain, variabel, metrik, setup, prosedur
-  [ ] Results — tabel + grafik + observasi (tanpa interpretasi)
-  [ ] Discussion — interpretasi, perbandingan, implikasi, limitation
-  [ ] Conclusion — jawaban RQ, kontribusi, future work
+  [X] Abstract — masalah, metode, hasil utama, kontribusi (max 250 kata)
+  [X] Introduction — konteks → gap → RQ → kontribusi → struktur paper
+  [X] Related Work — concept-centric, gap positioning
+  [X] Method — reproducible: desain, variabel, metrik, setup, prosedur
+  [X] Results — tabel + grafik + observasi (tanpa interpretasi)
+  [X] Discussion — interpretasi, perbandingan, implikasi, limitation
+  [X] Conclusion — jawaban RQ, kontribusi, future work
 
 Consistency Matrix:
-  [ ] RQ di Introduction = RQ di Method = RQ di Conclusion
-  [ ] Variabel di Method = variabel di Results
-  [ ] Klaim di Discussion didukung data di Results
-  [ ] Limitasi di Discussion di-address di Conclusion/Future Work
+  [X] RQ di Introduction = RQ di Method = RQ di Conclusion
+  [X] Variabel di Method = variabel di Results
+  [X] Klaim di Discussion didukung data di Results
+  [X] Limitasi di Discussion di-address di Conclusion/Future Work
 
 Writing Quality:
-  [ ] Clarity — mudah dipahami tanpa re-read
-  [ ] Precision — tidak ada istilah ambigu
-  [ ] Conciseness — tidak ada kalimat redundan
+  [X] Clarity — mudah dipahami tanpa re-read
+  [X] Precision — tidak ada istilah ambigu
+  [X] Conciseness — tidak ada kalimat redundan
 ```
 
 ---
@@ -116,13 +116,13 @@ Buat outline paper untuk riset Anda menggunakan struktur IMRAD.
 
 | Section | Konten Utama (2-3 kalimat) | Target Kata |
 |---------|---------------------------|------------|
-| Abstract | *Contoh: Sistem rekomendasi memiliki akurasi tinggi tapi satisfaction rendah. Studi ini menguji CF+context signal. Hasil: satisfaction naik 38% tanpa penurunan RMSE signifikan.* | 200-250 |
-| Introduction | *Contoh: Konteks: gap antara akurasi dan kepuasan pengguna. Gap: tidak ada studi yang mengkombinasikan CF+context. RQ: apakah CF+context meningkatkan satisfaction?* | 500-700 |
-| Related Work | | 700-1000 |
-| Method | | 800-1200 |
-| Results | | 500-800 |
-| Discussion | | 600-900 |
-| Conclusion | | 200-400 |
+| Abstract | *Menguji performa PostgreSQL vs MongoDB pada autentikasi Node.js berbeban tinggi (Bcrypt). PostgreSQL unggul telak dengan 14.67 RPS berbanding 0.31 RPS. Kegagalan mayoritas disebabkan oleh CPU bottleneck di application layer.* | 200-250 |
+| Introduction | *Pemilihan database NoSQL sering dianggap peluru perak untuk performa tinggi, namun efeknya pada CPU-intensive task seperti autentikasi jarang dibahas. Studi ini membandingkannya langsung di lingkungan terkontrol.* | 500-700 |
+| Related Work | *Perbandingan relasional dan dokumen DB, studi beban kerja CPU-bound vs I/O bound.* | 700-1000 |
+| Method | *100k data dummy, Prisma ORM, uji Autocannon 500 concurrent users selama 30 detik. Metrik: Latency, RPS.* | 800-1200 |
+| Results | *Tabel performa agregat RPS (14 vs 0) dan grafik line-chart time-series timeout MongoDB.* | 500-800 |
+| Discussion | *Perbedaan performa bukan berasal dari optimasi indeks DB, melainkan event-loop terblokir akibat komputasi hashing Bcrypt yang mencekik (throttle) CPU.* | 600-900 |
+| Conclusion | *PostgreSQL lebih tangguh di skenario monolitik Node.js. Rekomendasi riset: memisahkan arsitektur enkripsi ke microservice terpisah.* | 200-400 |
 
 ---
 
@@ -132,22 +132,20 @@ Buat consistency matrix untuk memverifikasi internal consistency paper Anda.
 
 |  | Intro | Method | Result | Discussion | Conclusion |
 |--|-------|--------|--------|-----------|-----------|
-| *Contoh: RQ1* | *✓* | *✓* | *✓* | *✓* | *✓* |
-| *Contoh: Metrik-X* | *✗ ←* | *✗ ←* | *✓* | *✗ ←* | *✗ ←* |
-| RQ1 | | | | | |
-| RQ2 | | | | | |
-| Metrik utama | | | | | |
-| Variabel IV | | | | | |
-| Variabel DV | | | | | |
-| Klaim/kontribusi | | | | | |
+| RQ Utama (DB mana lebih baik?) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Metrik (RPS & Latency) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Analisis Bottleneck (CPU) | ✗ | ✗ | ✓ | ✓ | ✓ |
+| Variabel Bebas (Tipe DB) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Variabel Terikat (Kinerja) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Kontribusi (Wawasan Arsitektur)| ✓ | ✗ | ✗ | ✓ | ✓ |
 
 **Isi setiap sel:** ✓ (ada & konsisten), ✗ (missing), ~ (ada tapi inkonsisten)
 
 **Inkonsistensi yang ditemukan:**
-> ___________________________________________________
+> Analisis `CPU Bottleneck` baru disadari dan muncul pada tahapan *Results* serta *Discussion*, padahal tidak direncanakan secara eksplisit dari awal (*Intro/Method*).
 
 **Tindakan perbaikan:**
-> ___________________________________________________
+> Merevisi kembali bab *Introduction* dan *Method* untuk memasukkan parameter pengecekan beban CPU (*Resource Monitoring*) sebagai bagian integral dari penelitian sejak awal, sehingga alurnya lebih linear dan *consistent*.
 
 ---
 
@@ -156,16 +154,16 @@ Buat consistency matrix untuk memverifikasi internal consistency paper Anda.
 Ambil satu paragraf dari tulisan Anda (atau tulis paragraf baru) dan evaluasi kualitasnya.
 
 **Paragraf asli:**
-> (tempel paragraf Anda di sini)
+> MongoDB memiliki kecepatan RPS 0.31 dan ini jelek sekali dibanding Postgres 14.67 karena laptopnya kepanasan buat ngitung password bcrypt.
 
 | Kriteria | Evaluasi | Perbaikan |
 |----------|---------|-----------|
-| Clarity | *Contoh: kalimat ke-3 ambigu — "performa" bisa berarti accuracy atau speed* | *Ubah menjadi: "accuracy meningkat..."* |
-| Precision | | |
-| Conciseness | | |
+| Clarity | *Kalimat terlalu santai (jelek sekali, kepanasan) dan terkesan tidak profesional.* | *Ganti istilah informal dengan terminologi teknis (throughput, thermal throttling).* |
+| Precision | *Tidak spesifik penyebab "kepanasan"-nya.* | *Jelaskan bahwa komputasi hashing Bcrypt memakan siklus CPU tinggi.* |
+| Conciseness | *Kata "ngitung" tidak tepat untuk hashing.* | *Ubah dengan frasa komputasi kriptografi.* |
 
 **Paragraf setelah perbaikan:**
-> (tulis paragraf yang sudah diperbaiki)
+> PostgreSQL menunjukkan *throughput* rata-rata (14.67 RPS) yang signifikan lebih tinggi dibandingkan MongoDB (0.31 RPS). Observasi lebih lanjut mengindikasikan bahwa tingginya tingkat kegagalan (1.992 *timeouts*) pada sistem MongoDB disebabkan oleh pembatasan suhu prosesor (*thermal throttling*) akibat intensifnya beban komputasi kriptografi Bcrypt, bukan murni keterbatasan dari arsitektur pangkalan data itu sendiri.
 
 ---
 
@@ -173,5 +171,4 @@ Ambil satu paragraf dari tulisan Anda (atau tulis paragraf baru) dan evaluasi ku
 
 > Apa perbedaan antara menulis "tentang" riset dan menulis sebagai "argumen" riset? Bagaimana urutan penulisan (Method → Discussion → Introduction) mengubah kualitas tulisan?
 
-> ___________________________________________________
-> ___________________________________________________
+> Menulis "tentang" riset sekadar melaporkan fakta (seperti buku harian lab), sedangkan menulis sebagai "argumen" riset berarti menyusun fakta-fakta tersebut untuk mempertahankan sebuah hipotesis. Dengan menulis *Method* & *Results* terlebih dahulu, kita tidak "mengarang" kesimpulan secara sepihak sebelum melihat bukti empiris yang riil, sehingga alur logika tetap berakar pada data objektif.
