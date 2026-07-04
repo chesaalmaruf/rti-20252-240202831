@@ -96,15 +96,16 @@ Susun execution plan untuk eksperimen Anda. Tentukan skenario, jumlah run, dan s
 
 | Run # | Skenario | Seed | Parameter Kunci | Status |
 |-------|----------|------|----------------|--------|
-| *1* | *Contoh: BERT-base, DS-1* | *42* | *lr=2e-5, epoch=10* | *Planned* |
-| *2* | *BERT-base, DS-1* | *123* | *lr=2e-5, epoch=10* | *Planned* |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+| 1 | PostgreSQL, Beban 500 | 42 | c=500, d=30s | Selesai |
+| 2 | PostgreSQL, Beban 500 | 42 | c=500, d=30s | Selesai |
+| 3 | PostgreSQL, Beban 500 | 42 | c=500, d=30s | Selesai |
+| 4 | MongoDB, Beban 500 | 42 | c=500, d=30s | Selesai |
+| 5 | MongoDB, Beban 500 | 42 | c=500, d=30s | Selesai |
+| 6 | MongoDB, Beban 500 | 42 | c=500, d=30s | Selesai |
 
-**Total skenario:** ____
-**Run per skenario:** ____
-**Total run keseluruhan:** ____
+**Total skenario:** 2 (PostgreSQL dan MongoDB)
+**Run per skenario:** 3
+**Total run keseluruhan:** 6
 
 ---
 
@@ -115,25 +116,27 @@ Desain format data log untuk eksperimen Anda. Tentukan field apa saja yang akan 
 **Identitas:**
 | Field | Contoh |
 |-------|--------|
-| Run ID | *run-001* |
-| Timestamp | *2025-03-15T10:30:00* |
-| | |
+| Run ID | *run-pg-001* |
+| Timestamp | *2026-07-04T10:30:00* |
+| Skenario | *PostgreSQL - 500 Concurrent* |
 
 **Konfigurasi:**
 | Field | Contoh |
 |-------|--------|
-| Seed | *42* |
-| Code version | *commit abc1234* |
-| | |
+| Seed | *42 (Dataset)* |
+| Code version | *Praktikum v1.0.0* |
+| Hyperparameter| *c=500, d=30s* |
 
 **Hasil:**
 | Metrik | Tipe Data | Range Valid |
 |--------|----------|-------------|
-| *Contoh: Accuracy* | *float* | *0.0 – 1.0* |
-| | | |
-| | | |
+| Rata-rata Latency (ms) | float | 0.0 – >10000.0 |
+| Rata-rata Throughput (RPS) | float | 0.0 – >100.0 |
+| Total Request Sukses | int | 0 - >1000 |
+| Total Gagal / Timeout | int | 0 - >2000 |
+| latencySeries | array(float) | Deret waktu (Time-series) |
 
-**Format output:** [ ] CSV / [ ] JSON / [ ] Database / [ ] Lainnya: ____
+**Format output:** [ ] CSV / [X] JSON / [ ] Database / [ ] Lainnya: ____
 
 ---
 
@@ -143,10 +146,10 @@ Rencanakan bagaimana menangani anomali. Untuk setiap jenis, tentukan langkah yan
 
 | Jenis Anomali | Contoh | Tindakan |
 |---------------|--------|----------|
-| Run gagal (crash) | *Contoh: OOM pada batch_size=64* | *Contoh: Dokumentasi, re-run batch_size=32, catat perubahan* |
-| Hasil ekstrem | | |
-| Waktu eksekusi anomali | | |
-| Inkonsistensi dengan run lain | | |
+| Run gagal (crash) | Node.js Out of Memory atau Prisma Crash | Hentikan server (Ctrl+C), kill task, catat di log, ulangi dari awal. |
+| Hasil ekstrem | Total gagal 1992 requests (MongoDB) | Indikasi Thermal Throttling. Hentikan eksekusi, biarkan CPU cooldown 5 menit, ulangi eksekusi. |
+| Waktu eksekusi anomali | Autocannon *hang* / *stuck* | Cek service DBMS (Postgres/Mongo) di Windows Services, restart service. |
+| Inkonsistensi dengan run lain | RPS drop drastis pada run ke-3 | Periksa *background process* (Windows Update/Defender Scan), matikan, re-run. |
 
 **Prinsip:** Detect → Investigate → Document → Decide
 
@@ -156,7 +159,8 @@ Rencanakan bagaimana menangani anomali. Untuk setiap jenis, tentukan langkah yan
 
 > Pernahkah Anda melaporkan hasil riset/tugas dari single run? Apa risikonya? Bagaimana multiple run mengubah kepercayaan terhadap hasil?
 
-**Pengalaman sebelumnya:**
-> ___________________________________________________
+**Pengaruh single run:**
+> Pada praktikum pengujian awal, kami hanya menjalankan tes 1 kali per database berurutan. Hasilnya MongoDB sangat buruk (4 sukses, 1992 gagal). Kemungkinan hal ini dipengaruhi oleh *thermal throttling* CPU karena dilakukan pasca-uji PostgreSQL, sehingga hasil single run ini sangat rawan bias dan tidak adil bagi MongoDB.
+
 **Yang akan dilakukan berbeda:**
-> ___________________________________________________
+> Melakukan minimal 3 putaran (*multiple runs*) untuk setiap skenario dengan menyisipkan waktu jeda istirahat (*cooldown phase*) 3-5 menit antar putaran. Dengan begitu, stabilitas suhu dan performa komputasi akan sama rata (*fair*) bagi tiap pengujian.
