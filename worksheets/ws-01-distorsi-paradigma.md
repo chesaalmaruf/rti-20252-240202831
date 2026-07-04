@@ -90,7 +90,6 @@ Tanggal          : 19 april 2026
 
 Pilih satu paper riset di bidang TI yang mengklaim "metode X meningkatkan performa." Telusuri setiap tahap Research Trust Model.
 
-<<<<<<< 
 **Paper yang dipilih:**
 > Judul: *Analisis Perbandingan Performansi Waktu Respons Kueri antara MySQL PHP 7.2.27 dan NoSQL MongoDB > Penulis : Olivia Maria dkk., 2020
 
