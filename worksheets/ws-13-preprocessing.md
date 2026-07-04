@@ -66,33 +66,33 @@ Data leakage terjadi ketika informasi dari test set "bocor" ke preprocessing:
 ```
 PREPROCESSING LOG
 
-Dataset           : ____________________
-Jumlah data awal  : ____________________
+Dataset           : Hasil log eksperimen (JSON)
+Jumlah data awal  : 2 set time-series (PostgreSQL & MongoDB)
 
 Cleaning:
 | Masalah | Jumlah Kasus | Penanganan | Justifikasi |
 |---------|-------------|------------|-------------|
-| Missing |             |            |             |
-| Duplikat|             |            |             |
-| Error   |             |            |             |
+| Missing | 0           | -          | Log dihasilkan sistemis |
+| Duplikat| 0           | -          | Setiap request tercatat 1 id |
+| Error   | 0           | -          | Autocannon handling otomatis |
 
 Transformation:
 | Transformasi | Variabel | Detail | Alasan |
 |-------------|----------|--------|--------|
-|             |          |        |        |
+| Aggregation | RPS      | Menggabungkan total req per detik | Menampilkan pergerakan kecepatan server (*time-series*) |
 
 Normalization:
-  Metode    : ____________________
-  Alasan    : ____________________
-  Parameter : (dihitung dari: training set / seluruh data)
+  Metode    : Tidak diterapkan
+  Alasan    : Eksperimen membandingkan angka mutlak/absolut performa fisik sistem (ms, RPS). Normalisasi menghilangkan *scale* dunia nyata.
+  Parameter : -
 
 Leakage Check:
-  [ ] Parameter normalisasi dari training set saja
-  [ ] Tidak ada informasi test set dalam preprocessing
-  [ ] Cross-validation dilakukan setelah split
+  [X] Parameter normalisasi dari training set saja (Tidak ada data leakage karena bukan model Prediksi AI/ML)
+  [X] Tidak ada informasi test set dalam preprocessing
+  [X] Cross-validation dilakukan setelah split
 
-Jumlah data akhir : ____________________
-Script tersedia   : [ ] Ya → path: ____ | [ ] Belum
+Jumlah data akhir : 2 set grafik time-series & tabel metrik absolut.
+Script tersedia   : [X] Ya → path: `/praktikum/stress-test.js` | [ ] Belum
 ```
 
 ---
@@ -103,14 +103,12 @@ Periksa dataset Anda (atau dataset contoh) dan dokumentasikan masalah yang ditem
 
 | Masalah | Jumlah Kasus | Penanganan | Justifikasi |
 |---------|-------------|------------|-------------|
-| *Contoh: Missing di kolom "label"* | *12 dari 500 (2.4%)* | *Listwise deletion* | *< 5%, distribusi random (MCAR)* |
-| | | | |
-| | | | |
-| | | | |
+| *Data Kosong (Missing)* | *0* | *-* | *Autocannon merekam metrik lengkap, tidak ada paket terbuang tanpa status.* |
+| *Timeouts / Gagal* | *MongoDB (1992)* | *Dicatat sebagai `Total Gagal`* | *Ini adalah temuan anomali performa sesungguhnya, BUKAN data kotor yang boleh dihapus.* |
 
-**Jumlah data sebelum cleaning:** ____
-**Jumlah data setelah cleaning:** ____
-**Persentase data yang hilang/berubah:** ____%
+**Jumlah data sebelum cleaning:** 2 File Laporan
+**Jumlah data setelah cleaning:** 2 File Laporan
+**Persentase data yang hilang/berubah:** 0%
 
 ---
 
@@ -120,16 +118,15 @@ Tentukan apakah data Anda perlu normalisasi, dan jika ya, metode apa yang tepat.
 
 | Variabel | Range Asli | Distribusi | Outlier? | Metode Normalisasi | Alasan |
 |----------|-----------|-----------|----------|-------------------|--------|
-| *Contoh: response_time* | *0.1 – 45.2s* | *Right-skewed* | *Ya (45.2s)* | *Robust scaling* | *Ada outlier, perlu robust* || *Contoh: accuracy_score* | *0.72 – 0.95* | *Normal, narrow* | *Tidak* | *Tidak perlu* | *Sudah dalam [0,1], metode berbasis distance tidak digunakan* || | | | | | |
-| | | | | | |
+| *Throughput (RPS)* | *0.0 – 14.67* | *Variatif / Drop ke 0* | *Ya (MongoDB 0.31)* | *Tidak perlu* | *Skala metrik RPS harus dijaga apa adanya agar kecepatan aktual tergambar nyata (misal: 14 RPS vs 0.3 RPS).* |
 
-**Apakah normalisasi diperlukan?** [ ] Ya / [ ] Tidak
+**Apakah normalisasi diperlukan?** [ ] Ya / [X] Tidak
 **Justifikasi:**
-> ___________________________________________________
+> Eksperimen ini mengukur dan membandingkan performa batas (*stress test*). Konteks satuan ukur seperti detik (s), milidetik (ms), dan *Requests per Second* (RPS) memiliki makna nyata. Menormalkan data menjadi skala `0-1` akan menghancurkan informasi kontekstual tentang seberapa lambat atau cepat sistem dalam waktu dunia nyata.
 
 **Leakage check:**
-- [ ] Parameter dihitung dari training set saja
-- [ ] Normalisasi diterapkan setelah train-test split
+- [X] Parameter dihitung dari training set saja (N/A)
+- [X] Normalisasi diterapkan setelah train-test split (N/A)
 
 ---
 
@@ -140,16 +137,16 @@ Buat ringkasan preprocessing lengkap — dokumentasi yang cukup bagi orang lain 
 ```
 PREPROCESSING SUMMARY
 
-1. Dataset: ____________________
-2. Data awal: ____ records, ____ features
+1. Dataset: Log JSON Autocannon (praktikum stress test)
+2. Data awal: 2 set run records, 5 features aggregat
 3. Cleaning:
-   - Missing values: ____ kasus, metode: ____
-   - Duplikat: ____ kasus, tindakan: ____
-   - Error: ____ kasus, tindakan: ____
-4. Transformation: ____________________
-5. Normalisasi: ____ (metode), parameter dari ____
-6. Data akhir: ____ records, ____ features
-7. Leakage check: [ ] Lulus / [ ] Ada masalah
+   - Missing values: 0 kasus, metode: N/A
+   - Duplikat: 0 kasus, tindakan: N/A
+   - Error: 0 kasus, tindakan: N/A (Timeout tidak dihitung sebagai data kotor)
+4. Transformation: Konversi list respon individu menjadi pergerakan *time-series* interval 1 detik.
+5. Normalisasi: Tidak diterapkan (metode), parameter dari N/A (Data mutlak dipertahankan).
+6. Data akhir: 2 set array *time-series*, 5 features aggregat per DBMS.
+7. Leakage check: [X] Lulus / [ ] Ada masalah
 ```
 
 ---
@@ -158,5 +155,5 @@ PREPROCESSING SUMMARY
 
 > Apakah Anda pernah melakukan normalisasi "karena biasa dilakukan" tanpa mempertimbangkan apakah benar-benar diperlukan? Apa risiko over-preprocessing?
 
-> ___________________________________________________
-> ___________________________________________________
+> Kadangkala normalisasi dilakukan secara "buta" karena menjadi standar di *machine learning*, tanpa mengingat bahwa metrik eksperimen sistem (*Systems Research*) seperti FPS, Latency, atau Bandwidth seringkali wajib disajikan dalam skala absolut aslinya agar dapat dipahami dan di-*benchmark* oleh pengguna (*developer* lain).
+> Risiko *over-preprocessing* adalah hilangnya signifikansi praktikal. Jika latensi diubah menjadi skor normal 0-1, pembaca tidak akan tahu apakah aplikasi tersebut merespons dalam 100ms (cepat) atau 5000ms (lambat).
