@@ -1,13 +1,7 @@
-# 00-admin
+# 00 - Administrasi
 
-Berkas administratif penelitian: jadwal bimbingan, korespondensi dengan pembimbing/editor jurnal, surat-menyurat, dan catatan administratif lainnya yang tidak masuk ke kategori ilmiah/teknis.
-
-## Isi yang diharapkan
-
-- Jadwal bimbingan & catatan rapat
-- Korespondensi (email, surat pengantar, dsb.)
-- Dokumen administratif lain (timeline, checklist submission jurnal)
+Direktori ini berisi berkas-berkas administratif terkait penelitian perbandingan performa DBMS (PostgreSQL vs MongoDB).
 
 ## Berkas
 
-- [jadwal-dan-log-penelitian.md](jadwal-dan-log-penelitian.md) — log kronologis pelaksanaan Tahap 1-5 dan checklist tindak lanjut sebelum submission
+- `jadwal-dan-log-penelitian.md` — Log eksperimen yang mencatat timeline uji coba dan kendala yang dihadapi (seperti efek *thermal throttling* selama *stress-test* MongoDB).

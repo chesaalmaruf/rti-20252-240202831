@@ -1,12 +1,5 @@
-# 08-laporan
+# 08 - Laporan Penelitian
 
-Laporan progres dan laporan akhir penelitian (untuk keperluan pelaporan ke institusi/pemberi dana, di luar naskah jurnal).
+Direktori ini menampung laporan akhir atau ringkasan keseluruhan dari eksperimen praktikum yang telah dikerjakan.
 
-## Isi yang diharapkan
-
-- Laporan progres berkala
-- Laporan akhir penelitian
-
-## Berkas
-
-- [laporan-penelitian.md](laporan-penelitian.md) — laporan penelitian komprehensif (ringkasan eksekutif, metodologi per tahap, hasil, kendala/catatan lingkungan, kesimpulan, lampiran)
+- Laporan utama: [laporan-penelitian.md](laporan-penelitian.md)

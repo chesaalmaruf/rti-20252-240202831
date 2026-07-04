@@ -1,18 +1,13 @@
-# 03-teori
+# 03 - Teori dan Arsitektur
 
-Arsitektur, desain, dan landasan teori sistem — hasil **Tahap 1**.
-
-## Isi yang diharapkan
-
-- Diagram alur resolusi kunci (mitigasi JWKS flooding)
-- Skema database PostgreSQL (`signing_keys`, `rate_limit_counters`)
-- Skema Redis (positive/negative cache)
-- Diagram arsitektur komponen (Gateway, Redis, PostgreSQL)
+Direktori ini berisi kerangka teori dan perancangan arsitektur untuk eksperimen.
 
 ## Berkas
 
-- [arsitektur-dan-skema.md](arsitektur-dan-skema.md) — diagram Mermaid (arsitektur komponen, alur resolusi kunci, fail-closed/fail-open, ERD database), skema Redis, dan pemetaan ke implementasi kode
+- Representasi Prisma Schema (`schema.prisma`)
+- Model *Relational* dan Model *Document* yang divalidasi dan digunakan dalam pengujian.
+- *Checklist* skenario pengontrolan variabel (seperti konfigurasi koneksi paralel 500 pengguna).
 
 ## Acuan
 
-Detail teknis lengkap Tahap 1 (status: selesai): [../09-docs/tahap-1-arsitektur-dan-skema-database.md](../09-docs/tahap-1-arsitektur-dan-skema-database.md)
+Dokumen teknis terperinci mengenai struktur arsitektur data: [../09-docs/tahap-1-arsitektur-dan-skema-database.md](../09-docs/tahap-1-arsitektur-dan-skema-database.md)

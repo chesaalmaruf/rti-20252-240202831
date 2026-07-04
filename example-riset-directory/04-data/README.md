@@ -1,13 +1,8 @@
-# 04-data
+# 04 - Data
 
-Data mentah hasil pengujian — output dari **Tahap 3**, input untuk **Tahap 4**.
+Direktori ini digunakan untuk menyimpan dataset pengujian dan data metrik hasil rekaman alat (Autocannon).
 
-## Isi yang diharapkan
+## Isi Data
 
-- Hasil pengujian k6 dalam format CSV/JSON, per kombinasi mode (`CACHE_MODE=none|hybrid`) × jenis traffic (legitimate/attack/mixed)
-- Metrik resource container (CPU, memori) PostgreSQL & Redis selama pengujian
-- Metadata eksekusi tiap run (timestamp, konfigurasi, durasi)
-
-## Catatan
-
-Data di folder ini bersifat mentah (raw) dan belum diolah. Hasil olahan (statistik, grafik) disimpan di [../06-output/](../06-output/).
+- **Data Seeding**: Dataset pengguna *dummy* sejumlah 100.000 (dibangkitkan menggunakan `@faker-js/faker` dengan `seed=42`).
+- **Data Eksekusi (JSON)**: Menyimpan luaran alat *load tester* (Autocannon) yang mencatat matriks RPS dan Latency dari 0 sampai 30 detik untuk pengujian PostgreSQL dan MongoDB (`hasil_eksperimen.json`).

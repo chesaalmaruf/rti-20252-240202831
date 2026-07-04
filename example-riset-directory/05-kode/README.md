@@ -1,25 +1,16 @@
-# 05-kode
+# 05 - Kode
 
-Source code implementasi — **Tahap 2** (API Gateway) dan **Tahap 3** (skrip pengujian k6).
+Direktori ini menyimpan implementasi *source code* (sistem aplikasi pengujian dan *load tester* eksperimen).
 
-## Struktur yang direncanakan
+## Struktur Kode
 
-```
-05-kode/
-├── gateway/              # API Gateway (Go + Echo)
-│   ├── cmd/gateway/
-│   ├── internal/
-│   ├── migrations/       # migration SQL (signing_keys, rate_limit_counters)
-│   ├── scripts/          # skrip seed (generate RSA keypair, insert signing_keys)
-│   ├── docker-compose.yml
-│   └── .env.example
-└── k6/                   # skrip pengujian k6
-    ├── legitimate.js
-    ├── attack.js
-    └── mixed.js
-```
+1. `server.js` — Server Node.js (Express) yang menampung rute API Autentikasi (`POST /api/login`) dengan integrasi keamanan Bcrypt.
+2. `stress-test.js` — Kode Node.js untuk mengeksekusi Autocannon secara otomatis, mengumpulkan agregasi Time-Series, dan mengekspor hasilnya.
+3. `switch-db.js` — Skrip utilitas otomatikal untuk menukar konfigurasi lingkungan `.env` dan `schema.prisma` ke basis data target antara PostgreSQL dan MongoDB.
+4. `seed.js` — Skrip pembangkit 100k data dummy.
 
-## Acuan
+## Referensi Setup
 
-- Rencana implementasi Gateway: [../09-docs/tahap-2-implementasi-gateway.md](../09-docs/tahap-2-implementasi-gateway.md)
-- Rencana skrip k6: [../09-docs/tahap-3-pengujian-k6.md](../09-docs/tahap-3-pengujian-k6.md)
+Dokumentasi untuk instalasi dependensi, kode `server.js`, dan eksekusi tes: 
+- [../09-docs/tahap-2-implementasi-node-prisma.md](../09-docs/tahap-2-implementasi-node-prisma.md)
+- [../09-docs/tahap-3-pengujian-autocannon.md](../09-docs/tahap-3-pengujian-autocannon.md)
