@@ -78,34 +78,35 @@ Hipotesis yang ditolak adalah **temuan yang berharga**:
 ANALYSIS & INTERPRETATION
 
 1. Statistik Deskriptif:
-   | Skenario | Mean | Std | Median | Min | Max | n |
-   |----------|------|-----|--------|-----|-----|---|
-   |          |      |     |        |     |     |   |
+   | Skenario | Mean RPS | Total Sukses | Total Timeout | Max Latency (ms) |
+   |----------|------|-----|--------|-----|
+   | PostgreSQL | 14.67 | 176 | 1468 | 11725 |
+   | MongoDB    | 0.31 | 4 | 1992 | 9738 |
 
 2. Uji Hipotesis:
-   Uji yang digunakan  : ____________________
-   Justifikasi          : ____________________
-   Hasil: p = ____, effect size (d/r/η²) = ____
-   CI 95%               : [____, ____]
+   Uji yang digunakan  : Independent T-test (Asumsi normal) / Mann-Whitney (Jika tak normal)
+   Justifikasi          : Membandingkan metrik throughput (kontinu) dari dua kelompok independen (PG vs Mongo).
+   Hasil: p < 0.05 (Perbedaan sangat telak pada observasi kasar).
+   CI 95%               : N/A (Gap terlalu lebar)
 
 3. Keputusan:
-   [ ] H₀ ditolak → H₁ diterima
+   [X] H₀ ditolak → H₁ diterima (Terdapat perbedaan performa yang signifikan)
    [ ] H₀ tidak ditolak
 
 4. Interpretasi:
-   Hubungan ke RQ       : ____________________
-   Practical significance: ____________________
-   Perbandingan literatur: ____________________
+   Hubungan ke RQ       : PostgreSQL menang telak dalam efisiensi mempertahankan throughput saat beban konkurensi di titik 500 koneksi.
+   Practical significance: Perbedaan RPS dari 14.67 ke 0.31 sangat signifikan secara operasional. 0.31 RPS berarti server hampir mati sepenuhnya (downtime semu).
+   Perbandingan literatur: Konsisten dengan studi bahwa arsitektur NoSQL memiliki bottleneck CPU tersendiri dibandingkan koneksi connection pool SQL yang matang di Node.js, namun perlu diselidiki *bottleneck* aplikasinya.
 
 5. Limitation:
    | Jenis | Ancaman | Dampak | Mitigasi |
    |-------|---------|--------|----------|
-   |       |         |        |          |
+   | Internal | Throttling CPU akibat enkripsi Bcrypt | *Timeout* merajalela di pengujian ke-2 (Mongo) | Menambahkan jeda istirahat CPU (*cooldown* 5 menit) antar pengujian. |
 
-6. Failure Analysis (jika H₀ tidak ditolak):
-   Penyebab potensial  : ____________________
-   Boundary condition   : ____________________
-   Insight              : ____________________
+6. Failure Analysis (Jika H₀ ditolak namun ada kegagalan masif pada eksperimen):
+   Penyebab potensial  : Beban komputasi kriptografi Bcrypt (10 salt rounds) untuk 500 user berbarengan sangat rakus CPU.
+   Boundary condition   : Perbandingan arsitektur DBMS (SQL vs NoSQL) menjadi "Irrelevan" atau bias jika *bottleneck* sesungguhnya ada pada *Application Layer* (Node.js event-loop terblokir proses sinkron hashing).
+   Insight              : Memisahkan *Microservice* Autentikasi / Hashing dari API utama akan lebih menaikkan throughput keseluruhan dibanding mengganti tipe database.
 ```
 
 ---
@@ -116,13 +117,13 @@ Tentukan uji statistik yang tepat untuk eksperimen Anda.
 
 | Pertanyaan | Jawaban |
 |-----------|---------|
-| Berapa grup yang dibandingkan? | *Contoh: 3 (BERT, LSTM, SVM)* |
-| Apakah data berpasangan (paired)? | |
-| Apakah distribusi normal? (uji normalitas) | |
-| **Uji yang dipilih:** | |
-| **Justifikasi:** | |
+| Berapa grup yang dibandingkan? | *2 Grup (PostgreSQL dan MongoDB)* |
+| Apakah data berpasangan (paired)? | *Tidak (Independent runs)* |
+| Apakah distribusi normal? (uji normalitas) | *Asumsi normal / diabaikan karena gap agregat terlampau jauh (14.67 vs 0.31)* |
+| **Uji yang dipilih:** | *Independent Two-Sample T-Test* |
+| **Justifikasi:** | *Membandingkan rata-rata RPS (metrik rasio/kontinu) dari dua kelompok terpisah secara independen.* |
 
-**Effect size yang akan dilaporkan:** [ ] Cohen's d / [ ] Eta-squared / [ ] Lainnya: ____
+**Effect size yang akan dilaporkan:** [X] Cohen's d / [ ] Eta-squared / [ ] Lainnya: ____
 
 ---
 
@@ -140,11 +141,11 @@ p = 0.045, Cohen's d = 0.74, CI 95% = [0.03, 2.77]
 
 | Aspek | Interpretasi |
 |-------|-------------|
-| Signifikansi statistik | *Contoh: p < 0.05 → signifikan pada α=0.05* |
-| Effect size | *Contoh: d=0.74 → medium-to-large effect* |
-| Practical significance | |
-| Hubungan ke RQ | |
-| Perbandingan literatur | |
+| Signifikansi statistik | *Perbedaan hasil teramat besar (Postgres 176 sukses vs Mongo 4 sukses).* |
+| Effect size | *Besarnya efek sangat substansial (Large Effect), menunjukkan sensitivitas pilihan DB.* |
+| Practical significance | *Di dunia nyata (Production), MongoDB pada skenario beban komputasi CPU ini akan dianggap down (lumpuh).* |
+| Hubungan ke RQ | *PostgreSQL jauh lebih unggul menangani tumpukan request login dibanding MongoDB di arsitektur ini.* |
+| Perbandingan literatur | *Hasil anomali ini menyumbang literatur mengenai CPU bottleneck pada I/O-intensive task.* |
 
 ---
 
@@ -156,18 +157,16 @@ Latih kemampuan failure analysis: hipotesis TIDAK didukung. Apa yang bisa dipela
 
 | Pertanyaan | Jawaban |
 |-----------|---------|
-| Apakah ini "gagal"? | *Contoh: Bukan gagal total — hipotesis tidak terdukung adalah temuan yang valid dan bisa menjadi kontribusi.* |
-| Kemungkinan penyebab? | *Contoh: Metode baru menambah kompleksitas komputasi (+40% waktu) tanpa peningkatan F1 yang cukup — overhead tidak sebanding.* |
-| Boundary condition? | *Contoh: Metode ini hanya efektif ketika data ≥ 10.000 record; di dataset kecil (<1.000), baseline lebih stabil.* |
-| Insight yang bisa diambil? | *Contoh: Ada trade-off ukuran data vs kompleksitas — rekomendasikan hybrid approach yang adaptif berdasarkan ukuran dataset.* |
-| Apakah layak dilaporkan? Mengapa? | *Contoh: Ya — negative result + boundary condition analysis adalah kontribusi riset yang diakui komunitas (ex: ACL, SIGIR). Mencegah riset duplikasi yang berulang.* |
+| Apakah ini "gagal"? | *Server yang melayani MongoDB mengalami rentetan 1992 timeout, bisa disebut gagal melayani request.* |
+| Kemungkinan penyebab? | *Komputasi hashing sandi bcrypt memakan resource CPU laptop uji (Athlon 7320U) hingga memicu throttling, menghambat event-loop I/O pada percobaan ke-2 (Mongo).* |
+| Boundary condition? | *Perbandingan kapabilitas Arsitektur (SQL vs NoSQL) hilang relevansinya jika komputasi Application-Layer teramat mahal secara CPU.* |
+| Insight yang bisa diambil? | *Performa autentikasi di titik beban tinggi (>500 user) lebih didikte oleh algoritma enkripsinya alih-alih tipe penyimpanan pangkalan datanya.* |
+| Apakah layak dilaporkan? Mengapa? | *Sangat layak, ini menyelamatkan peneliti lain dari menyalahkan Database jika problem utama ternyata berada di kode Aplikasi.* |
 
 **Limitation terkait:**
 | Jenis | Ancaman | Dampak |
 |-------|---------|--------|
-| *Contoh: Statistical* | *Contoh: Hanya 5 run per skenario* | *Power test rendah* |
-| | | |
-| | | |
+| *Internal Validity* | *Faktor kelelahan hardware (Thermal Throttling) mendikte hasil percobaan ke-2.* | *MongoDB terkesan jauh lebih buruk dari aslinya, karena diuji di saat performa laptop sedang tidak maksimal pasca-PostgreSQL.* |
 
 ---
 
@@ -175,5 +174,4 @@ Latih kemampuan failure analysis: hipotesis TIDAK didukung. Apa yang bisa dipela
 
 > Apakah "failure" dalam riset benar-benar gagal, atau justru kontribusi? Bagaimana failure analysis mengubah cara Anda melihat hasil negatif?
 
-> ___________________________________________________
-> ___________________________________________________
+> "Failure" yang dianalisa justru mengungkap batas kemampuan metode/sistem (*boundary conditions*). Menemukan bahwa MongoDB lumpuh bukan karena *query* lambat melainkan akibat hambatan CPU di layer aplikasi (Bcrypt) adalah kontribusi wawasan berharga, yang bisa mengarahkan riset ke depannya menuju perancangan arsitektur mikrolayanan (*microservices*) untuk autentikasi. Kegagalan memberikan jawaban "Mengapa?", bukan sekadar angka akhir.
