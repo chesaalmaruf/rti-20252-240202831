@@ -80,16 +80,16 @@ Hardware:
 Software:
   OS        : Windows 11 Home Single Language 64-bit
   Runtime   : Node.js v20.11.0 LTS + Java JRE 8 (Untuk Database Service)
-  Framework : Express.js v4.19.2 + Prisma ORM v5.12.1
+  Framework : Express.js v5.2.1 + Prisma ORM v6.19.3
 
 Dependencies:
 | Library | Version | Sumber | Hash/Checksum |
 | :--- | :--- | :--- | :--- |
-| `prisma` | 5.12.1 | npmjs.com | *sha512-Pr3m...* |
-| `@prisma/client` | 5.12.1 | npmjs.com | *sha512-Client...* |
-| `bcrypt` | 5.1.1 | npmjs.com | *sha512-BcrY...* |
-| `jsonwebtoken` | 9.0.2 | npmjs.com | *sha512-JwtK...* |
-| `autocannon` | 7.15.0 | npmjs.com | *sha512-AutoC...* |
+| `prisma` | 6.19.3 | npmjs.com | *sha512-Pr3m...* |
+| `@prisma/client` | 6.19.3 | npmjs.com | *sha512-Client...* |
+| `bcrypt` | 6.0.0 | npmjs.com | *sha512-BcrY...* |
+| `jsonwebtoken` | 9.0.3 | npmjs.com | *sha512-JwtK...* |
+| `autocannon` | 8.0.0 | npmjs.com | *sha512-AutoC...* |
 
 Konfigurasi:
   Config file     : `.env` (Environment variables), `prisma/schema.prisma`
@@ -113,18 +113,18 @@ Reproducibility Check:
 | **GPU** | Integrated AMD Radeon 610M (Shared Memory) |
 | **OS** | Windows 11 Home 64-bit |
 | **Runtime** | Node.js v20.11.0 LTS |
-| **Framework** | Express.js v4.19.2 + Prisma ORM v5.12.1 |
+| **Framework** | Express.js v5.2.1 + Prisma ORM v6.19.3 |
 | **Random Seed**| 42 (Batas iterasi dan data dummy dikunci konstan) |
 
 **Dependencies (minimal 5):**
 
 | Library | Version | Alasan Dibutuhkan |
 | :--- | :--- | :--- |
-| `prisma` | 5.12.1 | Object-Relational Mapping (ORM) terpadu untuk PostgreSQL & MongoDB |
-| `bcrypt` | 5.1.1 | Pustaka kriptografi untuk komputasi asinkron hashing & verifikasi sandi |
-| `jsonwebtoken`| 9.0.2 | Pembuatan token otentikasi (JWT) pasca-login sukses sebagai output sistem |
-| `autocannon` | 7.15.0 | Perkakas HTTP benchmarking lokal untuk menyuntikkan muatan stress-test |
-| `@faker-js/faker` | 8.4.1 | Pembangkit data identitas dummy unik (`email` & `password`) pada fase *seeding* |
+| `prisma` | 6.19.3 | Object-Relational Mapping (ORM) terpadu untuk PostgreSQL & MongoDB |
+| `bcrypt` | 6.0.0 | Pustaka kriptografi untuk komputasi asinkron hashing & verifikasi sandi |
+| `jsonwebtoken`| 9.0.3 | Pembuatan token otentikasi (JWT) pasca-login sukses sebagai output sistem |
+| `autocannon` | 8.0.0 | Perkakas HTTP benchmarking lokal untuk menyuntikkan muatan stress-test |
+| `@faker-js/faker` | 10.5.0 | Pembangkit data identitas dummy unik (`email` & `password`) pada fase *seeding* |
 
 ---
 
