@@ -145,18 +145,6 @@ Dalam kajian prestasi senario log masuk, kita mengandaikan kependaman dipengaruh
 | **– A** | ❌ *Plaintext (Tiada Hashing)* | ✅ *Prisma ORM* | ✅ *MongoDB (NoSQL)* | Menunjukkan kependaman dan had truput sebenar pangkalan data. |
 | **– B** | ✅ *Bcrypt Hashing* | ❌ *Native Driver (Mongoose)* | ✅ *MongoDB (NoSQL)* | Mengukur penalti prestasi (*overhead*) akibat penggunaan *Prisma ORM*. |
 | **– C** | ✅ *Bcrypt Hashing* | ✅ *Prisma ORM* | ❌ *PostgreSQL (SQL)* | Menjawab persoalan kajian utama sama ada *PostgreSQL* lebih efisien pada tahap seni bina ini. |
-=======
-> **Panduan jumlah kondisi:** Untuk 3 komponen (A, B, C), kondisi minimal yang direkomendasikan:
-> Full + (-A) + (-B) + (-C) = **4 kondisi dasar**. Jika waktu memungkinkan, tambahkan kombinasi ganda: (-A,-B), (-A,-C), (-B,-C) = **7 kondisi**. Sesuaikan dengan *computational cost* dan tenggat waktu penelitian.
-
-| Kondisi | Komponen A | Komponen B | Komponen C | Hasil yang Diharapkan |
-|---------|-----------|-----------|-----------|----------------------|
-| Full | *Contoh: ✅ CNN* | *Contoh: ✅ Temporal features* | *Contoh: ✅ Z-score norm* | *Baseline penuh* |
-| – A | ❌ (ganti RF) | ✅ | ✅ | |
-| – B | ✅ | ❌ (tanpa temporal) | ✅ | |
-| – C | ✅ | ✅ | ❌ (tanpa normalisasi) | |
->>>>>>> upstream/main
-
 **Komponen mana yang diprediksi paling berkontribusi?** Komponen A (Lapisan Kriptografi / *Bcrypt*).
 **Mengapa?**
 > Reka bentuk *Bcrypt* sememangnya sengaja diperlahankan untuk mengelakkan serangan *brute-force*. Oleh itu, ia akan memakan sumber CPU yang jauh lebih besar berbanding masa yang diambil oleh pangkalan data (Komponen C) untuk mencari maklumat pengguna.
