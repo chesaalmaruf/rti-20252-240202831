@@ -1,0 +1,74 @@
+{
+  "PostgreSQL": {
+    "Rata-rata Latency (ms)": 7962.11,
+    "Latency Terlama (ms)": 11725,
+    "Rata-rata Throughput (RPS)": 14.67,
+    "Total Request Sukses": 176,
+    "Total Gagal / Timeout": 1468,
+    "latencySeries": [
+      0,
+      0,
+      3690.1782916666666,
+      4868.2073375,
+      5455.94426875,
+      6441.550259999999,
+      7482.056854166668,
+      8442.2519375,
+      9520.561558333337,
+      11137.133982142857,
+      11717.411991666666,
+      11717.411991666666
+    ],
+    "throughputSeries": [
+      0,
+      0,
+      12,
+      16,
+      16,
+      20,
+      24,
+      24,
+      24,
+      28,
+      12,
+      0
+    ]
+  },
+  "MongoDB": {
+    "Rata-rata Latency (ms)": 8437.25,
+    "Latency Terlama (ms)": 9738,
+    "Rata-rata Throughput (RPS)": 0.31,
+    "Total Request Sukses": 4,
+    "Total Gagal / Timeout": 1992,
+    "latencySeries": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      7150.0364,
+      7150.0364,
+      9712.4636,
+      9738.4135,
+      9738.4135,
+      9738.4135,
+      9738.4135
+    ],
+    "throughputSeries": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0
+    ]
+  }
+}

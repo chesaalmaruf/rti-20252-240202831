@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualisasi Eksperimen DBMS (Time Series)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #0d1117; color: #c9d1d9; }
+        .container { max-width: 1000px; margin: auto; background: #161b22; padding: 30px; border-radius: 10px; border: 1px solid #30363d; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: #58a6ff; }
+        p.desc { text-align: center; color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+        .chart-wrapper { width: 100%; height: 400px; margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 Grafik Time-Series Performa Database</h1>
+        <p class="desc">Memantau fluktuasi Latency dan Throughput dari detik pertama hingga akhir pengujian (30 detik).</p>
+        
+        <h2>1. Rata-rata Latency per Detik</h2>
+        <div class="chart-wrapper">
+            <canvas id="latencyChart"></canvas>
+        </div>
+        
+        <h2>2. Throughput per Detik (RPS)</h2>
+        <div class="chart-wrapper">
+            <canvas id="throughputChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        Chart.defaults.color = '#8b949e';
+        Chart.defaults.borderColor = '#30363d';
+
+        const labels = ["Detik 1","Detik 2","Detik 3","Detik 4","Detik 5","Detik 6","Detik 7","Detik 8","Detik 9","Detik 10","Detik 11","Detik 12","Detik 13","Detik 14","Detik 15","Detik 16","Detik 17","Detik 18","Detik 19","Detik 20","Detik 21","Detik 22","Detik 23","Detik 24","Detik 25","Detik 26","Detik 27","Detik 28","Detik 29","Detik 30"];
+
+        // Grafik Latency
+        new Chart(document.getElementById('latencyChart'), {
+            type: 'line',
+            data: { labels: labels, datasets: [{"label":"POSTGRESQL","data":[0,0,3690.1782916666666,4868.2073375,5455.94426875,6441.550259999999,7482.056854166668,8442.2519375,9520.561558333337,11137.133982142857,11717.411991666666,11717.411991666666],"borderColor":"#3498db","backgroundColor":"rgba(52, 152, 219, 0.1)","borderWidth":2,"fill":true,"tension":0.2,"pointRadius":2,"pointHitRadius":10},{"label":"MONGODB","data":[0,0,0,0,0,0,7150.0364,7150.0364,9712.4636,9738.4135,9738.4135,9738.4135,9738.4135],"borderColor":"#2ecc71","backgroundColor":"rgba(46, 204, 113, 0.1)","borderWidth":2,"fill":true,"tension":0.2,"pointRadius":2,"pointHitRadius":10},{"label":"DATABASE_SAAT_INI","data":[],"borderColor":"#e74c3c","backgroundColor":"rgba(231, 76, 60, 0.1)","borderWidth":2,"fill":true,"tension":0.2,"pointRadius":2,"pointHitRadius":10}] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: { 
+                    x: { title: { display: true, text: 'Waktu Pengujian (Detik)' } },
+                    y: { title: { display: true, text: 'Waktu Tunggu / Latency (ms)' }, beginAtZero: true } 
+                }
+            }
+        });
+
+        // Grafik Throughput
+        new Chart(document.getElementById('throughputChart'), {
+            type: 'line',
+            data: { labels: labels, datasets: [{"label":"POSTGRESQL","data":[0,0,12,16,16,20,24,24,24,28,12,0],"borderColor":"#3498db","backgroundColor":"rgba(52, 152, 219, 0.1)","borderWidth":2,"fill":true,"tension":0.2,"pointRadius":2,"pointHitRadius":10},{"label":"MONGODB","data":[0,0,0,0,0,0,2,0,1,1,0,0,0],"borderColor":"#2ecc71","backgroundColor":"rgba(46, 204, 113, 0.1)","borderWidth":2,"fill":true,"tension":0.2,"pointRadius":2,"pointHitRadius":10},{"label":"DATABASE_SAAT_INI","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],"borderColor":"#e74c3c","backgroundColor":"rgba(231, 76, 60, 0.1)","borderWidth":2,"fill":true,"tension":0.2,"pointRadius":2,"pointHitRadius":10}] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: { 
+                    x: { title: { display: true, text: 'Waktu Pengujian (Detik)' } },
+                    y: { title: { display: true, text: 'Jumlah Request Berhasil (RPS)' }, beginAtZero: true } 
+                }
+            }
+        });
+    </script>
+</body>
+</html>

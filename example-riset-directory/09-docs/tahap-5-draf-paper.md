@@ -5,7 +5,7 @@ Dokumen ini merangkum penyusunan naskah penelitian berstruktur IMRAD untuk dipub
 ## 1. Metadata Publikasi
 
 **Judul Draft:** Analisis Performa Komparatif Antara PostgreSQL dan MongoDB pada Sistem Autentikasi Node.js dalam Kondisi High-Concurrency
-**Potensi Outlet:** Jurnal Ilmiah (Sinta 2) / Laporan Akhir
+**Potensi Outlet:** 
 
 ## 2. Draf Abstrak
 
